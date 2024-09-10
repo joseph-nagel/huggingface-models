@@ -1,6 +1,9 @@
-datasets
+numpy
+matplotlib
+torch
+torchvision
 timm
 transformers
-diffusers
+datasets
 notebook
 
