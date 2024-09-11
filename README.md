@@ -9,5 +9,5 @@ Both of them implement convenient APIs for model loading, training, fine-tuning 
 
 - [PyTorch image models](notebooks/timm.ipynb)
 
-- [Transformers](notebooks/transformers.ipynb)
+- [Transformers: Image classification](notebooks/transformers_class.ipynb)
 
