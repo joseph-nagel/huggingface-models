@@ -1,5 +1,6 @@
 numpy
 matplotlib
+pillow
 torch
 torchvision
 timm
