@@ -124,32 +124,41 @@ class CIFAR10DataModule(LightningDataModule):
                 self.test_ds.with_format('torch')
 
     def train_dataloader(self):
-        return DataLoader(
-            self.train_ds, # DataLoaders accept datasets.Dataset objects
-            batch_size=self.batch_size,
-            drop_last=True,
-            shuffle=True,
-            num_workers=self.num_workers,
-            pin_memory=self.num_workers > 0
-        )
+        if hasattr(self, 'train_ds'):
+            return DataLoader(
+                self.train_ds, # DataLoaders accept datasets.Dataset objects
+                batch_size=self.batch_size,
+                drop_last=True,
+                shuffle=True,
+                num_workers=self.num_workers,
+                pin_memory=self.num_workers > 0
+            )
+        else:
+            raise AttributeError('Train set has not been set')
 
     def val_dataloader(self):
-        return DataLoader(
-            self.val_ds,
-            batch_size=self.batch_size,
-            drop_last=False,
-            shuffle=False,
-            num_workers=self.num_workers,
-            pin_memory=self.num_workers > 0
-        )
+        if hasattr(self, 'val_ds'):
+            return DataLoader(
+                self.val_ds,
+                batch_size=self.batch_size,
+                drop_last=False,
+                shuffle=False,
+                num_workers=self.num_workers,
+                pin_memory=self.num_workers > 0
+            )
+        else:
+            raise AttributeError('Val. set has not been set')
 
     def test_dataloader(self):
-        return DataLoader(
-            self.test_ds,
-            batch_size=self.batch_size,
-            drop_last=False,
-            shuffle=False,
-            num_workers=self.num_workers,
-            pin_memory=self.num_workers > 0
-        )
+        if hasattr(self, 'test_ds'):
+            return DataLoader(
+                self.test_ds,
+                batch_size=self.batch_size,
+                drop_last=False,
+                shuffle=False,
+                num_workers=self.num_workers,
+                pin_memory=self.num_workers > 0
+            )
+        else:
+            raise AttributeError('Test set has not been set')
 
