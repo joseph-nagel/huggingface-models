@@ -163,6 +163,14 @@ class CIFAR10DataModule(BaseDataModule):
         else:
             raise AttributeError('Data has not been loaded/initialized yet')
 
+    @property
+    def id2label(self):
+        return {idx: label for idx, label in enumerate(self.label_names)}
+
+    @property
+    def label2id(self):
+        return {label: idx for idx, label in enumerate(self.label_names)}
+
     def prepare_data(self):
         '''Download data.'''
 
