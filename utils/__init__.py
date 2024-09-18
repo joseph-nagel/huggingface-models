@@ -2,5 +2,5 @@
 
 from . import data
 
-from .data import CIFAR10DataModule
+from .data import BaseDataModule, CIFAR10DataModule
 
