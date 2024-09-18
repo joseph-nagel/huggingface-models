@@ -14,78 +14,62 @@ class ImageTransform:
     ----------
     img_transform : callable
         Transformation applied to the images.
-    img_key : str
-        Key of the images in a batch dict.
+    source_key : str
+        Key of the original images in a batch dict.
+    target_key : str
+        Key of the transformed images in a batch dict.
 
     '''
 
-    def __init__(self, img_transform, img_key='img'):
+    def __init__(self,
+                 img_transform,
+                 source_key='img',
+                 target_key='pixel_values'):
+
         self.img_transform = img_transform
-        self.img_key = img_key
+        self.source_key = source_key
+        self.target_key = target_key
 
     def __call__(self, batch_dict):
 
-        # apply transform to images only
+        source_imgs = batch_dict.pop(self.source_key)
+
+        # apply transform to images
         if self.img_transform is not None:
-            batch_dict[self.img_key] = [self.img_transform(img) for img in batch_dict[self.img_key]]
+            transformed_imgs = [self.img_transform(img.convert('RGB')) for img in source_imgs]
+        else:
+            transformed_imgs = source_imgs
+
+        batch_dict[self.target_key] = transformed_imgs
 
         return batch_dict
 
 
 class BaseDataModule(LightningDataModule):
     '''
-    Lightning DataModule for the Hugging Face datasets.
+    Lightning base DataModule for Hugging Face datasets.
 
     Parameters
     ----------
-    data_dir : str
-        Directory for storing the data.
-    mean : float
-        Mean for data normalization.
-    std : float, optional
-        Standard deviation for normalization.
-    random_state : int
-        Random generator seed.
-    batch_size : int, optional
+    batch_size : int
         Batch size of the data loader.
-    num_workers : int, optional
+    num_workers : int
         Number of workers for the loader.
 
     '''
 
-    def __init__(self,
-                 data_dir=None,
-                 mean=(0.5, 0.5, 0.5),
-                 std=(0.5, 0.5, 0.5),
-                 random_state=42,
-                 batch_size=32,
-                 num_workers=0):
+    def __init__(self, batch_size=32, num_workers=0):
 
         super().__init__()
-
-        # set data location
-        self.data_dir = data_dir
-
-        # set random state
-        self.random_state = random_state
 
         # set loader parameters
         self.batch_size = batch_size
         self.num_workers = num_workers
 
-        # create transforms
-        transforms_list = [transforms.ToTensor()]
-
-        if (mean is not None) and (std is not None): # normalize (e.g. scale to [-1, 1])
-            normalize_fn = transforms.Normalize(mean=mean, std=std)
-            transforms_list.append(normalize_fn)
-
-        self.transform = transforms.Compose(transforms_list)
-
         # define datasets as None
-        self.train_set = None
-        self.val_set = None
-        self.test_set = None
+        self.train_ds = None
+        self.val_ds = None
+        self.test_ds = None
 
     def train_dataloader(self):
         if hasattr(self, 'train_ds') and self.train_ds is not None:
@@ -133,27 +117,77 @@ class CIFAR10DataModule(BaseDataModule):
 
     Parameters
     ----------
-    See docstring of "BaseDataModule".
+    data_dir : str
+        Directory for storing the data.
+    transform : None or callable
+        Image transformation for all splits.
+    train_transform : None or callable
+        Image transformation for the train set.
+    val_transform : None or callable
+        Image transformation for the val. set.
+    test_transform : None or callable
+        Image transformation for the test set.
+    random_state : int
+        Random generator seed.
+    batch_size : int
+        Batch size of the data loader.
+    num_workers : int
+        Number of workers for the loader.
 
     '''
 
     def __init__(self,
                  data_dir=None,
-                 mean=(0.5, 0.5, 0.5),
-                 std=(0.5, 0.5, 0.5),
+                 transform=None,
+                 train_transform=None,
+                 val_transform=None,
+                 test_transform=None,
                  random_state=42,
                  batch_size=32,
                  num_workers=0):
 
         # call base class init
         super().__init__(
-            data_dir=data_dir,
-            mean=mean,
-            std=std,
-            random_state=random_state,
             batch_size=batch_size,
             num_workers=num_workers
         )
+
+        # set data location
+        self.data_dir = data_dir
+
+        # set random state
+        self.random_state = random_state
+
+        # set transforms
+        specific_transforms = (train_transform, val_transform, test_transform)
+
+        all_spec_transforms_are_none = all([t is None for t in specific_transforms])
+        no_spec_transform_is_none = all([t is not None for t in specific_transforms])
+
+        # if no transform is passed, initialize the universal one with a default
+        if (transform is None) and all_spec_transforms_are_none:
+            transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=(0.5, 0.5, 0.5),
+                    std=(0.5, 0.5, 0.5)
+                )
+            ])
+
+        # if a universal transform is passed, set all specific ones accordingly
+        if (transform is not None) and all_spec_transforms_are_none:
+            self.train_transform = transform
+            self.val_transform = transform
+            self.test_transform = transform
+
+        # set specific transforms individually
+        elif (transform is None) and no_spec_transform_is_none:
+            self.train_transform = train_transform
+            self.val_transform = val_transform
+            self.test_transform = test_transform
+
+        else:
+            raise ValueError('Invalid combination of transforms')
 
     @property
     def label_names(self):
@@ -165,10 +199,12 @@ class CIFAR10DataModule(BaseDataModule):
 
     @property
     def id2label(self):
+        '''Get idx-to-label dict.'''
         return {idx: label for idx, label in enumerate(self.label_names)}
 
     @property
     def label2id(self):
+        '''Get label-to-idx dict.'''
         return {label: idx for idx, label in enumerate(self.label_names)}
 
     def prepare_data(self):
@@ -195,25 +231,14 @@ class CIFAR10DataModule(BaseDataModule):
             self.train_ds = split_ds['train']
             self.val_ds = split_ds['test']
 
-            # set image transformation
-            if self.transform is not None:
-                train_transform = ImageTransform(self.transform)
-                val_transform = ImageTransform(self.transform)
-
-                self.train_ds.set_transform(train_transform)
-                self.val_ds.set_transform(val_transform)
-            else:
-                self.train_ds.with_format('torch')
-                self.val_ds.with_format('torch')
+            # set image transformations
+            self.train_ds.set_transform(ImageTransform(self.train_transform))
+            self.val_ds.set_transform(ImageTransform(self.val_transform))
 
         # create test dataset
         elif stage == 'test':
             self.test_ds = self.ds['test']
 
             # set image transformation
-            if self.transform is not None:
-                test_transform = ImageTransform(self.transform)
-                self.test_ds.set_transform(test_transform)
-            else:
-                self.test_ds.with_format('torch')
+            self.test_ds.set_transform(ImageTransform(self.test_transform))
 
