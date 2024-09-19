@@ -21,6 +21,9 @@ class CIFAR10DataModule(BaseDataModule):
         Mean for data normalization.
     img_std : float
         Standard deviation for normalization.
+    tiny : bool
+        Determines whether a tiny version of
+        the dataset is used for debugging.
     random_state : int
         Random generator seed.
     batch_size : int
@@ -36,6 +39,7 @@ class CIFAR10DataModule(BaseDataModule):
                  img_mean=(0.5, 0.5, 0.5),
                  img_std=(0.5, 0.5, 0.5),
                  random_state=42,
+                 tiny=False,
                  batch_size=32,
                  num_workers=0):
 
@@ -68,6 +72,9 @@ class CIFAR10DataModule(BaseDataModule):
         # set data location
         self.cache_dir = cache_dir
 
+        # set tiny flag
+        self.tiny = tiny
+
         # set random state
         self.random_state = random_state
 
@@ -93,10 +100,19 @@ class CIFAR10DataModule(BaseDataModule):
         '''Download data.'''
 
         # initialize a datasets.Dataset
-        self.ds = load_dataset(
-            'cifar10',
-            cache_dir=self.cache_dir
-        )
+        if not self.tiny:
+            self.ds = load_dataset(
+                'cifar10',
+                cache_dir=self.cache_dir
+            )
+
+        # use a minimal version of the data
+        else:
+            self.ds = load_dataset(
+                'cifar10',
+                cache_dir=self.cache_dir,
+                split='train[:200]'
+            ).train_test_split(0.2, seed=0)
 
     def setup(self, stage):
         '''Set up train/test/val. datasets.'''

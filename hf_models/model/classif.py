@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-import torch
 from torchmetrics.classification import Accuracy
 from transformers import AutoModelForImageClassification
 
@@ -72,9 +71,9 @@ class LightningImageClassifier(LightningBaseModel):
         outputs = self.model(**batch)
 
         if not return_logits:
-            return outputs.loss
+            return outputs['loss']
         else:
-            return outputs.loss, outputs.logits
+            return outputs['loss'], outputs['logits']
 
     def training_step(self, batch, batch_idx):
         loss, logits = self.loss(batch, return_logits=True)
@@ -102,9 +101,4 @@ class LightningImageClassifier(LightningBaseModel):
         self.log('test_loss', loss.item()) # Lightning automatically averages scalars over batches for testing
         self.log('test_acc', self.test_acc) # the batch size is considered when logging torchmetrics.Metric objects
         return loss
-
-    # TODO: enable LR scheduling
-    def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
-        return optimizer
 

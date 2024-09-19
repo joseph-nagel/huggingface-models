@@ -36,12 +36,12 @@ class LightningBaseModel(LightningModule):
     def forward(self, x):
         '''Run the model.'''
         outputs = self.model(x)
-        return outputs.logits
+        return outputs['logits']
 
     def loss(self, batch):
         '''Compute the loss.'''
         outputs = self.model(**batch)
-        return outputs.loss
+        return outputs['loss']
 
     def training_step(self, batch, batch_idx):
         loss = self.loss(batch)

@@ -9,6 +9,7 @@ data:
     img_mean: 224
     img_mean: [0.5, 0.5, 0.5]
     img_std: [0.5, 0.5, 0.5]
+    tiny: False
     random_state: 42
     batch_size: 32
     num_workers: 0
@@ -16,15 +17,15 @@ data:
 model:
   class_path: "hf_models.LightningImageClassifier"
   init_args:
-    ckpt_name: 'google/vit-base-patch16-224'
+    ckpt_name: 'microsoft/resnet-18'
     cache_dir: "run/data"
     num_labels: 10
     lr: 1e-04
 
 trainer:
   accelerator: "cpu"
-  max_epochs: 1
-  log_every_n_steps: 100
+  max_epochs: 100
+  log_every_n_steps: 10
   logger:
     class_path: "lightning.pytorch.loggers.TensorBoardLogger"
     init_args:
@@ -47,10 +48,10 @@ trainer:
         save_top_k: -1
         every_n_epochs: 1
         save_last: true
-    - class_path: "lightning.pytorch.callbacks.ModelCheckpoint"
-      init_args:
-        filename: "{step}"
-        save_top_k: -1
-        every_n_train_steps: 1
-        save_last: false
+    # - class_path: "lightning.pytorch.callbacks.ModelCheckpoint"
+    #   init_args:
+    #     filename: "{step}"
+    #     save_top_k: -1
+    #     every_n_train_steps: 1
+    #     save_last: false
 
