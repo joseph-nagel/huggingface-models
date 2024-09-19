@@ -1,0 +1,56 @@
+seed_everything: null
+
+ckpt_path: null
+
+data:
+  class_path: "hf_models.CIFAR10DataModule"
+  init_args:
+    cache_dir: "run/data"
+    img_mean: 224
+    img_mean: [0.5, 0.5, 0.5]
+    img_std: [0.5, 0.5, 0.5]
+    random_state: 42
+    batch_size: 32
+    num_workers: 0
+
+model:
+  class_path: "hf_models.LightningImageClassifier"
+  init_args:
+    ckpt_name: 'google/vit-base-patch16-224'
+    cache_dir: "run/data"
+    num_labels: 10
+    lr: 1e-04
+
+trainer:
+  accelerator: "cpu"
+  max_epochs: 1
+  log_every_n_steps: 100
+  logger:
+    class_path: "lightning.pytorch.loggers.TensorBoardLogger"
+    init_args:
+      save_dir: "run/"
+      name: "transfer"
+      version: null
+  callbacks:
+    - class_path: "lightning.pytorch.callbacks.LearningRateMonitor"
+      init_args:
+        logging_interval: null
+    - class_path: "lightning.pytorch.callbacks.ModelCheckpoint"
+      init_args:
+        filename: "best"
+        monitor: "val_loss"
+        mode: "min"
+        save_top_k: 1
+    - class_path: "lightning.pytorch.callbacks.ModelCheckpoint"
+      init_args:
+        filename: "{epoch}"
+        save_top_k: -1
+        every_n_epochs: 1
+        save_last: true
+    - class_path: "lightning.pytorch.callbacks.ModelCheckpoint"
+      init_args:
+        filename: "{step}"
+        save_top_k: -1
+        every_n_train_steps: 1
+        save_last: false
+

@@ -23,3 +23,9 @@ Both of them implement convenient APIs for model loading, training, fine-tuning 
 pip install -e .
 ```
 
+## Training
+
+```
+python scripts/main.py fit --config config/transfer.yaml
+```
+

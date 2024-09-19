@@ -5,7 +5,17 @@ from lightning.pytorch import LightningModule
 
 
 class LightningBaseModel(LightningModule):
-    '''Lightning wrapper for Hugging Face models.'''
+    '''
+    Lightning wrapper for Hugging Face models.
+
+    Parameters
+    ----------
+    model : Hugging Face model
+        Hugging Face transformers model.
+    lr : float
+        Initial optimizer learning rate.
+
+    '''
 
     def __init__(self, model, lr=1e-04):
 

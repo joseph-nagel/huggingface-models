@@ -125,7 +125,7 @@ class CIFAR10DataModule(BaseDataModule):
 
     Parameters
     ----------
-    data_dir : str
+    cache_dir : str
         Directory for storing the data.
     img_size : int or (int, int)
         Target image size.
@@ -143,7 +143,7 @@ class CIFAR10DataModule(BaseDataModule):
     '''
 
     def __init__(self,
-                 data_dir=None,
+                 cache_dir=None,
                  img_size=224,
                  img_mean=(0.5, 0.5, 0.5),
                  img_std=(0.5, 0.5, 0.5),
@@ -178,7 +178,7 @@ class CIFAR10DataModule(BaseDataModule):
         )
 
         # set data location
-        self.data_dir = data_dir
+        self.cache_dir = cache_dir
 
         # set random state
         self.random_state = random_state
@@ -207,7 +207,7 @@ class CIFAR10DataModule(BaseDataModule):
         # initialize a datasets.Dataset
         self.ds = load_dataset(
             'cifar10',
-            data_dir=self.data_dir
+            cache_dir=self.cache_dir
         )
 
     def setup(self, stage):
