@@ -92,6 +92,14 @@ class BaseDataModule(LightningDataModule):
 
     Parameters
     ----------
+    transform : None or callable
+        Image transformation for all splits.
+    train_transform : None or callable
+        Image transformation for the train set.
+    val_transform : None or callable
+        Image transformation for the val. set.
+    test_transform : None or callable
+        Image transformation for the test set.
     batch_size : int
         Batch size of the data loader.
     num_workers : int
@@ -99,7 +107,13 @@ class BaseDataModule(LightningDataModule):
 
     '''
 
-    def __init__(self, batch_size=32, num_workers=0):
+    def __init__(self,
+                 transform=None,
+                 train_transform=None,
+                 val_transform=None,
+                 test_transform=None,
+                 batch_size=32,
+                 num_workers=0):
 
         super().__init__()
 
@@ -111,6 +125,37 @@ class BaseDataModule(LightningDataModule):
         self.train_ds = None
         self.val_ds = None
         self.test_ds = None
+
+        # set transforms
+        specific_transforms = (train_transform, val_transform, test_transform)
+
+        all_spec_transforms_are_none = all([t is None for t in specific_transforms])
+        no_spec_transform_is_none = all([t is not None for t in specific_transforms])
+
+        # if no transform is passed, initialize the universal one with a default
+        if (transform is None) and all_spec_transforms_are_none:
+            transform = transforms.Compose([
+                transforms.ToTensor(),
+                transforms.Normalize(
+                    mean=(0.5, 0.5, 0.5),
+                    std=(0.5, 0.5, 0.5)
+                )
+            ])
+
+        # if a universal transform is passed, set all specific ones accordingly
+        if (transform is not None) and all_spec_transforms_are_none:
+            self.train_transform = transform
+            self.val_transform = transform
+            self.test_transform = transform
+
+        # set specific transforms individually
+        elif (transform is None) and no_spec_transform_is_none:
+            self.train_transform = train_transform
+            self.val_transform = val_transform
+            self.test_transform = test_transform
+
+        else:
+            raise ValueError('Invalid combination of transforms')
 
     def train_dataloader(self):
         if hasattr(self, 'train_ds') and self.train_ds is not None:
@@ -160,14 +205,12 @@ class CIFAR10DataModule(BaseDataModule):
     ----------
     data_dir : str
         Directory for storing the data.
-    transform : None or callable
-        Image transformation for all splits.
-    train_transform : None or callable
-        Image transformation for the train set.
-    val_transform : None or callable
-        Image transformation for the val. set.
-    test_transform : None or callable
-        Image transformation for the test set.
+    img_size : int or (int, int)
+        Target image size.
+    img_mean : float
+        Mean for data normalization.
+    img_std : float
+        Standard deviation for normalization.
     random_state : int
         Random generator seed.
     batch_size : int
@@ -179,16 +222,35 @@ class CIFAR10DataModule(BaseDataModule):
 
     def __init__(self,
                  data_dir=None,
-                 transform=None,
-                 train_transform=None,
-                 val_transform=None,
-                 test_transform=None,
+                 img_size=224,
+                 img_mean=(0.5, 0.5, 0.5),
+                 img_std=(0.5, 0.5, 0.5),
                  random_state=42,
                  batch_size=32,
                  num_workers=0):
 
+        # create transforms
+        train_transform = transforms.Compose([
+            transforms.Resize(img_size),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=img_mean, std=img_std)
+        ])
+
+        val_transform = transforms.Compose([
+            transforms.Resize(img_size),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=img_mean, std=img_std)
+        ])
+
+        test_transform = val_transform
+
         # call base class init
         super().__init__(
+            transform=None,
+            train_transform=train_transform,
+            val_transform=val_transform,
+            test_transform=test_transform,
             batch_size=batch_size,
             num_workers=num_workers
         )
@@ -198,37 +260,6 @@ class CIFAR10DataModule(BaseDataModule):
 
         # set random state
         self.random_state = random_state
-
-        # set transforms
-        specific_transforms = (train_transform, val_transform, test_transform)
-
-        all_spec_transforms_are_none = all([t is None for t in specific_transforms])
-        no_spec_transform_is_none = all([t is not None for t in specific_transforms])
-
-        # if no transform is passed, initialize the universal one with a default
-        if (transform is None) and all_spec_transforms_are_none:
-            transform = transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=(0.5, 0.5, 0.5),
-                    std=(0.5, 0.5, 0.5)
-                )
-            ])
-
-        # if a universal transform is passed, set all specific ones accordingly
-        if (transform is not None) and all_spec_transforms_are_none:
-            self.train_transform = transform
-            self.val_transform = transform
-            self.test_transform = transform
-
-        # set specific transforms individually
-        elif (transform is None) and no_spec_transform_is_none:
-            self.train_transform = train_transform
-            self.val_transform = val_transform
-            self.test_transform = test_transform
-
-        else:
-            raise ValueError('Invalid combination of transforms')
 
     @property
     def label_names(self):
