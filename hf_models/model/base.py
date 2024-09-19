@@ -1,10 +1,10 @@
-'''Lightning wrapper.'''
+'''Base wrapper.'''
 
 import torch
 from lightning.pytorch import LightningModule
 
 
-class BaseLightningModel(LightningModule):
+class LightningBaseModel(LightningModule):
     '''Lightning wrapper for Hugging Face models.'''
 
     def __init__(self, model, lr=1e-04):

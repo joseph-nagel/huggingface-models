@@ -2,5 +2,7 @@
 
 from . import base
 
-from .base import BaseLightningModel
+from .base import LightningBaseModel
+
+from .classif import LightningImageClassifier
 

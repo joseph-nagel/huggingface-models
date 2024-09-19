@@ -4,5 +4,5 @@ from . import data, model
 
 from .data import BaseDataModule, CIFAR10DataModule
 
-from .model import BaseLightningModel
+from .model import LightningBaseModel, LightningImageClassifier
 
