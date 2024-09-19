@@ -9,11 +9,13 @@ Both of them implement convenient APIs for model loading, training, fine-tuning 
 
 - [timm](notebooks/timm.ipynb)
 
-- [transformers: Image classification](notebooks/transformers_class.ipynb)
+- [transformers: Image classification](notebooks/transformers_classif.ipynb)
 
-- [transformers: Object detection](notebooks/transformers_det.ipynb)
+- [transformers: Object detection](notebooks/transformers_detect.ipynb)
 
-- [transformers: Semantic segmentation](notebooks/transformers_seg.ipynb)
+- [transformers: Semantic segmentation](notebooks/transformers_segment.ipynb)
+
+- [transformers: Transfer learning](notebooks/transformers_transfer.ipynb)
 
 ## Installation
 
