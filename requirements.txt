@@ -2,6 +2,8 @@ numpy
 pillow
 torch
 torchvision
+lightning
+tensorboard
 timm
 transformers
 datasets

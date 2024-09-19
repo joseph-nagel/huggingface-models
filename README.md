@@ -15,3 +15,9 @@ Both of them implement convenient APIs for model loading, training, fine-tuning 
 
 - [transformers: Semantic segmentation](notebooks/transformers_seg.ipynb)
 
+## Installation
+
+```
+pip install -e .
+```
+
