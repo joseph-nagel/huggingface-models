@@ -1,8 +1,10 @@
 '''Data.'''
 
-from . import datamodules, transform
+from . import base, cifar, transform
 
-from .datamodules import BaseDataModule, CIFAR10DataModule
+from .base import BaseDataModule
+
+from .cifar import CIFAR10DataModule
 
 from .transform import DataTransform
 
