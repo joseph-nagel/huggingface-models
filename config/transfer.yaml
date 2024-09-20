@@ -17,7 +17,7 @@ data:
 model:
   class_path: "hf_models.LightningImageClassifier"
   init_args:
-    ckpt_name: 'microsoft/resnet-18'
+    ckpt_name: "microsoft/resnet-18"
     cache_dir: "run/data"
     num_labels: 10
     lr: 1e-04
