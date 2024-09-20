@@ -7,12 +7,16 @@ The [timm](https://huggingface.co/docs/timm/index) (PyTorch image models)
 and the [transformers](https://huggingface.co/docs/transformers/index)
 library implement quite convenient APIs for using pretrained models.
 Both of them allow for model loading, training, fine-tuning and inference.
+Similarly, [diffusers](https://huggingface.co/docs/diffusers/index)
+makes a number of pretrained generative diffusion models easily accessible.
 
 In a number of notebooks, it is shown how to import a model and make predictions.
 Beyond that, a dedicated demonstration of transfer learning is provided.
 This example uses PyTorch and Lightning on top of the transformers library.
 
 ## Notebooks
+
+- [diffusers](notebooks/diffusers.ipynb)
 
 - [timm](notebooks/timm.ipynb)
 
