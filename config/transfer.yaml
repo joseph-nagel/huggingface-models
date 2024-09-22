@@ -3,7 +3,7 @@ seed_everything: null
 ckpt_path: null
 
 data:
-  class_path: "hf_models.CIFAR10DataModule"
+  class_path: "lightning_face.CIFAR10DataModule"
   init_args:
     cache_dir: "run/data"
     img_mean: 224
@@ -15,7 +15,7 @@ data:
     num_workers: 0
 
 model:
-  class_path: "hf_models.LightningImageClassifier"
+  class_path: "lightning_face.LightningImageClassifier"
   init_args:
     ckpt_name: "microsoft/resnet-18"
     cache_dir: "run/data"

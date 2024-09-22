@@ -1,4 +1,4 @@
-'''Hugging Face model tools.'''
+'''PyTorch Lightning for Hugging Face models.'''
 
 from . import data, model
 
