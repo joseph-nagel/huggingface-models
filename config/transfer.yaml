@@ -5,7 +5,7 @@ ckpt_path: null
 data:
   class_path: "lightning_face.CIFAR10DataModule"
   init_args:
-    cache_dir: "run/data"
+    data_dir: "run/data/"
     img_mean: 224
     img_mean: [0.5, 0.5, 0.5]
     img_std: [0.5, 0.5, 0.5]
@@ -17,8 +17,8 @@ data:
 model:
   class_path: "lightning_face.LightningImageClassifier"
   init_args:
-    ckpt_name: "microsoft/resnet-18"
-    cache_dir: "run/data"
+    model_name: "microsoft/resnet-18"
+    data_dir: "run/data/"
     num_labels: 10
     lr: 1e-04
 
@@ -36,7 +36,7 @@ trainer:
     # init_args:
     #   experiment_name: "transfer"
     #   run_name: null
-    #   save_dir: "run/mlruns"
+    #   save_dir: "run/mlruns/"
     #   log_model: true
   callbacks:
     - class_path: "lightning.pytorch.callbacks.LearningRateMonitor"

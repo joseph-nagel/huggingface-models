@@ -13,7 +13,7 @@ class CIFAR10DataModule(BaseDataModule):
 
     Parameters
     ----------
-    cache_dir : str
+    data_dir : str
         Directory for storing the data.
     img_size : int or (int, int)
         Target image size.
@@ -34,7 +34,7 @@ class CIFAR10DataModule(BaseDataModule):
     '''
 
     def __init__(self,
-                 cache_dir=None,
+                 data_dir=None,
                  img_size=224,
                  img_mean=(0.5, 0.5, 0.5),
                  img_std=(0.5, 0.5, 0.5),
@@ -70,7 +70,7 @@ class CIFAR10DataModule(BaseDataModule):
         )
 
         # set data location
-        self.cache_dir = cache_dir
+        self.data_dir = data_dir
 
         # set tiny flag
         self.tiny = tiny
@@ -103,14 +103,14 @@ class CIFAR10DataModule(BaseDataModule):
         if not self.tiny:
             self.ds = load_dataset(
                 'cifar10',
-                cache_dir=self.cache_dir
+                cache_dir=self.data_dir
             )
 
         # use a minimal version of the data
         else:
             self.ds = load_dataset(
                 'cifar10',
-                cache_dir=self.cache_dir,
+                cache_dir=self.data_dir,
                 split='train[:200]'
             ).train_test_split(0.2, seed=0)
 

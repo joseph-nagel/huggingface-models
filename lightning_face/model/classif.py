@@ -14,9 +14,9 @@ class LightningImageClassifier(LightningBaseModel):
 
     Parameters
     ----------
-    ckpt_name : str
+    model_name : str
         Name of the model checkpoint.
-    cache_dir : str
+    data_dir : str
         Directory for storing the checkpoint.
     num_labels : int
         Number of target labels.
@@ -26,8 +26,8 @@ class LightningImageClassifier(LightningBaseModel):
     '''
 
     def __init__(self,
-                 ckpt_name='google/vit-base-patch16-224',
-                 cache_dir=None,
+                 model_name='google/vit-base-patch16-224',
+                 data_dir=None,
                  num_labels=10,
                  lr=1e-04):
 
@@ -35,8 +35,8 @@ class LightningImageClassifier(LightningBaseModel):
         ignore_mismatched_sizes = False if num_labels is None else True
 
         model = AutoModelForImageClassification.from_pretrained(
-            ckpt_name,
-            cache_dir=cache_dir,
+            model_name,
+            cache_dir=data_dir,
             num_labels=num_labels,
             ignore_mismatched_sizes=ignore_mismatched_sizes
         )
@@ -54,10 +54,10 @@ class LightningImageClassifier(LightningBaseModel):
         super().__init__(model=model, lr=lr)
 
         # store hyperparams
-        abs_cache_dir = str(Path(cache_dir).resolve())
+        abs_data_dir = str(Path(data_dir).resolve())
 
         self.save_hyperparameters(
-            {'cache_dir': abs_cache_dir}, # store absolute cache path for later re-import
+            {'data_dir': abs_data_dir}, # store absolute cache path for later re-import
             logger=True
         )
 
