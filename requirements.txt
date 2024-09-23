@@ -4,6 +4,7 @@ torch
 torchvision
 lightning
 tensorboard
+mlflow
 timm
 transformers
 datasets

@@ -23,6 +23,7 @@ dependencies = [
     "torchvision",
     "lightning",
     "tensorboard",
+    "mlflow",
     "timm",
     "transformers",
     "datasets"

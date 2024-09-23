@@ -32,6 +32,12 @@ trainer:
       save_dir: "run/"
       name: "transfer"
       version: null
+    # class_path: "lightning.pytorch.loggers.MLFlowLogger"
+    # init_args:
+    #   experiment_name: "transfer"
+    #   run_name: null
+    #   save_dir: "run/mlruns"
+    #   log_model: true
   callbacks:
     - class_path: "lightning.pytorch.callbacks.LearningRateMonitor"
       init_args:
