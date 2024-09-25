@@ -3,7 +3,7 @@ Transfer learning.
 
 Example
 -------
-python scripts/train_transfer_learning.py --tiny --max-epochs 5 --log-every-n-steps 1
+python scripts/train_transfer_learning.py --tiny --max-epochs 3 --log-every-n-steps 1
 
 '''
 
@@ -31,7 +31,7 @@ def parse_args():
 
     parser.add_argument('--ckpt-file', type=Path, required=False, help='Checkpoint for resuming')
 
-    parser.add_argument('--logger', type=str, default='none', help='Logger')
+    parser.add_argument('--logger', type=str, default='tensorboard', help='Logger')
     parser.add_argument('--save-dir', type=Path, default='run/', help='Save dir')
     parser.add_argument('--name', type=str, default='transfer', help='Experiment name')
     parser.add_argument('--version', type=str, required=False, help='Experiment version')
@@ -127,7 +127,7 @@ def main(args):
             log_model=True
         )
     else:
-        logger = None
+        raise ValueError(f'Unknown logger: {args.logger}')
 
     # set up LR monitor
     lr_monitor = LearningRateMonitor(logging_interval=None)
@@ -189,10 +189,17 @@ def main(args):
 
     # start MLflow autologging
     save_dir = args.save_dir / 'mlruns'
+
     mlflow.set_tracking_uri(f'file:{save_dir}')
     mlflow.set_experiment(experiment_name=args.name)
 
-    mlflow.pytorch.autolog()
+    # TODO: disable logging and checkpointing other than mlflow autolog
+    mlflow.pytorch.autolog(
+        log_every_n_epoch=1,
+        log_every_n_step=None,
+        checkpoint_save_best_only=False,
+        checkpoint_save_freq='epoch'
+    )
 
     with mlflow.start_run(run_name=args.version):
 
