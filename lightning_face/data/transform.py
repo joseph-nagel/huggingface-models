@@ -13,21 +13,21 @@ class DataTransform:
     Summary
     -------
     A transformation is applied to items from a Hugging Face datasets.Dataset.
-    Appropriate transformations, that accept a PIL image input and return a tensor,
+    Appropriate transformations, that should accept a PIL image input and return a tensor,
     can be constructed with the help of the torchvision library for example.
-    In addition to the transform, image and label dict keys may be renamed.
+    In addition to the transform, the dict keys of images and labels may be renamed.
 
     Parameters
     ----------
-    img_transform : callable
+    img_transform : callable or None
         Transformation applied to each image.
     img_source_key : str
         Key of the original images in a batch dict.
-    img_target_key : str
+    img_target_key : str or None
         Key of the transformed images in a batch dict.
     lbl_source_key : str
         Key of the labels in the original batch dict.
-    lbl_target_key : str
+    lbl_target_key : str or None
         Key of the labels in returned batch dict.
 
     '''
@@ -36,9 +36,9 @@ class DataTransform:
         self,
         img_transform: Callable[[Image.Image], torch.tensor] | None,
         img_source_key: str = 'img',
-        img_target_key: str = 'pixel_values',
+        img_target_key: str | None = 'pixel_values',
         lbl_source_key: str = 'label',
-        lbl_target_key: str = 'labels'
+        lbl_target_key: str | None = 'labels'
     ) -> None:
 
         # set image transform
