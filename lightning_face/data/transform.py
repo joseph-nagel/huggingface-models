@@ -1,5 +1,10 @@
 '''Data transformations.'''
 
+from collections.abc import Callable
+
+from PIL import Image
+import torch
+
 
 class DataTransform:
     '''
@@ -7,14 +12,15 @@ class DataTransform:
 
     Summary
     -------
-    An image transformation (torchvision) can be applied to all
-    items from a Hugging Face datasets.Datasets individually.
-    Additionally, the image and label dict keys can be renamed.
+    A transformation is applied to items from a Hugging Face datasets.Dataset.
+    Appropriate transformations, that accept a PIL image input and return a tensor,
+    can be constructed with the help of the torchvision library for example.
+    In addition to the transform, image and label dict keys may be renamed.
 
     Parameters
     ----------
     img_transform : callable
-        Transformation applied to the images.
+        Transformation applied to each image.
     img_source_key : str
         Key of the original images in a batch dict.
     img_target_key : str
@@ -26,12 +32,14 @@ class DataTransform:
 
     '''
 
-    def __init__(self,
-                 img_transform,
-                 img_source_key='img',
-                 img_target_key='pixel_values',
-                 lbl_source_key='label',
-                 lbl_target_key='labels'):
+    def __init__(
+        self,
+        img_transform: Callable[[Image.Image], torch.tensor] | None,
+        img_source_key: str = 'img',
+        img_target_key: str = 'pixel_values',
+        lbl_source_key: str = 'label',
+        lbl_target_key: str = 'labels'
+    ) -> None:
 
         # set image transform
         self.img_transform = img_transform
@@ -48,7 +56,7 @@ class DataTransform:
             lbl_source_key = lbl_source_key
             lbl_target_key = lbl_source_key
         elif None in (lbl_source_key, lbl_target_key):
-            raise TypeError('Invalid image source/target keys')
+            raise TypeError('Invalid label source/target keys')
 
         # set image and label keys
         img_keys = (img_source_key, img_target_key)
@@ -63,7 +71,8 @@ class DataTransform:
             self.lbl_source_key = lbl_source_key
             self.lbl_target_key = lbl_target_key
 
-    def __call__(self, batch_dict):
+    def __call__(self, batch_dict: dict[str, Image.Image]) -> dict[str, torch.Tensor]:
+        '''Apply transform to a batch of PIL images.'''
 
         # apply transform to images
         source_imgs = batch_dict.pop(self.img_source_key)

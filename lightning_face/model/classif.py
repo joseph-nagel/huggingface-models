@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import torch
 from torchmetrics.classification import Accuracy
 from transformers import AutoModelForImageClassification
 
@@ -25,11 +26,13 @@ class LightningImageClassifier(LightningBaseModel):
 
     '''
 
-    def __init__(self,
-                 model_name='google/vit-base-patch16-224',
-                 data_dir=None,
-                 num_labels=10,
-                 lr=1e-04):
+    def __init__(
+        self,
+        model_name: str = 'google/vit-base-patch16-224',
+        data_dir: str | None = None,
+        num_labels: int = 10,
+        lr: float = 1e-04
+    ) -> None:
 
         # load pretrained model
         ignore_mismatched_sizes = False if num_labels is None else True
@@ -66,8 +69,13 @@ class LightningImageClassifier(LightningBaseModel):
         self.val_acc = Accuracy(task='multiclass', num_classes=num_labels)
         self.test_acc = Accuracy(task='multiclass', num_classes=num_labels)
 
-    def loss(self, batch, return_logits=False):
+    def loss(
+        self,
+        batch,
+        return_logits: bool = False
+    ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         '''Compute loss (and return logits).'''
+
         outputs = self.model(**batch)
 
         if not return_logits:
@@ -75,30 +83,48 @@ class LightningImageClassifier(LightningBaseModel):
         else:
             return outputs['loss'], outputs['logits']
 
-    def training_step(self, batch, batch_idx):
+    def training_step(
+        self,
+        batch: dict[str, torch.Tensor],
+        batch_idx: int
+    ) -> torch.Tensor:
+
         loss, logits = self.loss(batch, return_logits=True)
 
         _ = self.train_acc(logits, batch['labels'])
 
         self.log('train_loss', loss.item()) # Lightning logs batch-wise scalars during training per default
         self.log('train_acc', self.train_acc) # the same applies to torchmetrics.Metric objects
+
         return loss
 
-    def validation_step(self, batch, batch_idx):
+    def validation_step(
+        self,
+        batch: dict[str, torch.Tensor],
+        batch_idx: int
+    ) -> torch.Tensor:
+
         loss, logits = self.loss(batch, return_logits=True)
 
         _ = self.val_acc(logits, batch['labels'])
 
         self.log('val_loss', loss.item()) # Lightning automatically averages scalars over batches for validation
         self.log('val_acc', self.val_acc) # the batch size is considered when logging torchmetrics.Metric objects
+
         return loss
 
-    def test_step(self, batch, batch_idx):
+    def test_step(
+        self,
+        batch: dict[str, torch.Tensor],
+        batch_idx: int
+    ) -> torch.Tensor:
+
         loss, logits = self.loss(batch, return_logits=True)
 
         _ = self.test_acc(logits, batch['labels'])
 
         self.log('test_loss', loss.item()) # Lightning automatically averages scalars over batches for testing
         self.log('test_acc', self.test_acc) # the batch size is considered when logging torchmetrics.Metric objects
+
         return loss
 

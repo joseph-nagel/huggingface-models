@@ -1,5 +1,9 @@
 '''Base datamodule.'''
 
+from collections.abc import Callable
+
+from PIL import Image
+import torch
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from lightning import LightningDataModule
@@ -26,13 +30,15 @@ class BaseDataModule(LightningDataModule):
 
     '''
 
-    def __init__(self,
-                 transform=None,
-                 train_transform=None,
-                 val_transform=None,
-                 test_transform=None,
-                 batch_size=32,
-                 num_workers=0):
+    def __init__(
+        self,
+        transform: Callable[[Image.Image], torch.tensor] | None = None,
+        train_transform: Callable[[Image.Image], torch.tensor] | None = None,
+        val_transform: Callable[[Image.Image], torch.tensor] | None = None,
+        test_transform: Callable[[Image.Image], torch.tensor] | None = None,
+        batch_size: int = 32,
+        num_workers: int  = 0
+    ) -> None:
 
         super().__init__()
 
@@ -76,7 +82,7 @@ class BaseDataModule(LightningDataModule):
         else:
             raise ValueError('Invalid combination of transforms')
 
-    def train_dataloader(self):
+    def train_dataloader(self) -> DataLoader:
         if hasattr(self, 'train_ds') and self.train_ds is not None:
             return DataLoader(
                 self.train_ds, # DataLoaders accept datasets.Dataset objects
@@ -89,7 +95,7 @@ class BaseDataModule(LightningDataModule):
         else:
             raise AttributeError('Train set has not been set')
 
-    def val_dataloader(self):
+    def val_dataloader(self) -> DataLoader:
         if hasattr(self, 'val_ds') and self.val_ds is not None:
             return DataLoader(
                 self.val_ds,
@@ -102,7 +108,7 @@ class BaseDataModule(LightningDataModule):
         else:
             raise AttributeError('Val. set has not been set')
 
-    def test_dataloader(self):
+    def test_dataloader(self) -> DataLoader:
         if hasattr(self, 'test_ds') and self.test_ds is not None:
             return DataLoader(
                 self.test_ds,

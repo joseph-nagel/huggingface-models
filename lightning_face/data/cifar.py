@@ -1,5 +1,7 @@
 '''CIFAR datamodules.'''
 
+from collections.abc import Sequence
+
 from torchvision import transforms
 from datasets import load_dataset
 
@@ -17,9 +19,9 @@ class CIFAR10DataModule(BaseDataModule):
         Directory for storing the data.
     img_size : int or (int, int)
         Target image size.
-    img_mean : float
+    img_mean : float or (float, float, float)
         Mean for data normalization.
-    img_std : float
+    img_std : float or (float, float, float)
         Standard deviation for normalization.
     tiny : bool
         Determines whether a tiny version of
@@ -33,15 +35,17 @@ class CIFAR10DataModule(BaseDataModule):
 
     '''
 
-    def __init__(self,
-                 data_dir=None,
-                 img_size=224,
-                 img_mean=(0.5, 0.5, 0.5),
-                 img_std=(0.5, 0.5, 0.5),
-                 random_state=42,
-                 tiny=False,
-                 batch_size=32,
-                 num_workers=0):
+    def __init__(
+        self,
+        data_dir: str | None = None,
+        img_size: int | Sequence[int, int] = 224,
+        img_mean: float | Sequence[float, float, float] = (0.5, 0.5, 0.5),
+        img_std: float | Sequence[float, float, float] = (0.5, 0.5, 0.5),
+        random_state: int = 42,
+        tiny: bool = False,
+        batch_size: int = 32,
+        num_workers: int = 0
+    ) -> None:
 
         # create transforms
         train_transform = transforms.Compose([
@@ -79,24 +83,25 @@ class CIFAR10DataModule(BaseDataModule):
         self.random_state = random_state
 
     @property
-    def label_names(self):
+    def label_names(self) -> list[str]:
         '''Get label names.'''
+
         if hasattr(self, 'ds'):
             return self.ds['train'].features['label'].names
         else:
             raise AttributeError('Data has not been loaded/initialized yet')
 
     @property
-    def id2label(self):
+    def id2label(self) -> dict[int, str]:
         '''Get idx-to-label dict.'''
         return {idx: label for idx, label in enumerate(self.label_names)}
 
     @property
-    def label2id(self):
+    def label2id(self) -> dict[str, int]:
         '''Get label-to-idx dict.'''
         return {label: idx for idx, label in enumerate(self.label_names)}
 
-    def prepare_data(self):
+    def prepare_data(self) -> None:
         '''Download data.'''
 
         # initialize a datasets.Dataset
@@ -114,7 +119,7 @@ class CIFAR10DataModule(BaseDataModule):
                 split='train[:200]'
             ).train_test_split(0.2, seed=0)
 
-    def setup(self, stage):
+    def setup(self, stage: str) -> None:
         '''Set up train/test/val. datasets.'''
 
         # create train/val. datasets
