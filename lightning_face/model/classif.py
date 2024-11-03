@@ -57,12 +57,15 @@ class LightningImageClassifier(LightningBaseModel):
         super().__init__(model=model, lr=lr)
 
         # store hyperparams
-        abs_data_dir = str(Path(data_dir).resolve())
+        if data_dir is not None:
+            abs_data_dir = str(Path(data_dir).resolve())
 
-        self.save_hyperparameters(
-            {'data_dir': abs_data_dir}, # store absolute cache path for later re-import
-            logger=True
-        )
+            self.save_hyperparameters(
+                {'data_dir': abs_data_dir}, # store absolute custom cache path for later re-import
+                logger=True
+            )
+        else:
+            self.save_hyperparameters(logger=True)
 
         # create accuracy metrics
         self.train_acc = Accuracy(task='multiclass', num_classes=num_labels)
@@ -71,7 +74,7 @@ class LightningImageClassifier(LightningBaseModel):
 
     def loss(
         self,
-        batch,
+        batch: dict[str, torch.Tensor],
         return_logits: bool = False
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         '''Compute loss (and return logits).'''

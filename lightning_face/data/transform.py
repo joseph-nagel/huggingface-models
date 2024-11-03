@@ -1,6 +1,6 @@
 '''Data transformations.'''
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 
 from PIL import Image
 import torch
@@ -71,7 +71,7 @@ class DataTransform:
             self.lbl_source_key = lbl_source_key
             self.lbl_target_key = lbl_target_key
 
-    def __call__(self, batch_dict: dict[str, Image.Image]) -> dict[str, torch.Tensor]:
+    def __call__(self, batch_dict: dict) -> dict:
         '''Apply transform to a batch of PIL images.'''
 
         # apply transform to images

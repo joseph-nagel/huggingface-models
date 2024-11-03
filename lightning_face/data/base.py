@@ -15,13 +15,13 @@ class BaseDataModule(LightningDataModule):
 
     Parameters
     ----------
-    transform : None or callable
+    transform : callable or None
         Image transformation for all splits.
-    train_transform : None or callable
+    train_transform : callable or None
         Image transformation for the train set.
-    val_transform : None or callable
+    val_transform : callable or None
         Image transformation for the val. set.
-    test_transform : None or callable
+    test_transform : callable or None
         Image transformation for the test set.
     batch_size : int
         Batch size of the data loader.
@@ -47,9 +47,9 @@ class BaseDataModule(LightningDataModule):
         self.num_workers = num_workers
 
         # define datasets as None
-        self.train_ds = None
-        self.val_ds = None
-        self.test_ds = None
+        # self.train_ds = None
+        # self.val_ds = None
+        # self.test_ds = None
 
         # set transforms
         specific_transforms = (train_transform, val_transform, test_transform)

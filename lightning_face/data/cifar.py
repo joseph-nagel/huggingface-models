@@ -1,12 +1,15 @@
 '''CIFAR datamodules.'''
 
-from collections.abc import Sequence
-
 from torchvision import transforms
 from datasets import load_dataset
 
 from .base import BaseDataModule
 from .transform import DataTransform
+
+
+# define type aliases
+IntOrInts = int | tuple[int, int]
+FloatOrFloats = float | tuple[float, float, float]
 
 
 class CIFAR10DataModule(BaseDataModule):
@@ -15,7 +18,7 @@ class CIFAR10DataModule(BaseDataModule):
 
     Parameters
     ----------
-    data_dir : str
+    data_dir : str or None
         Directory for storing the data.
     img_size : int or (int, int)
         Target image size.
@@ -38,9 +41,9 @@ class CIFAR10DataModule(BaseDataModule):
     def __init__(
         self,
         data_dir: str | None = None,
-        img_size: int | Sequence[int, int] = 224,
-        img_mean: float | Sequence[float, float, float] = (0.5, 0.5, 0.5),
-        img_std: float | Sequence[float, float, float] = (0.5, 0.5, 0.5),
+        img_size: IntOrInts = 224,
+        img_mean: FloatOrFloats = (0.5, 0.5, 0.5),
+        img_std: FloatOrFloats = (0.5, 0.5, 0.5),
         random_state: int = 42,
         tiny: bool = False,
         batch_size: int = 32,
