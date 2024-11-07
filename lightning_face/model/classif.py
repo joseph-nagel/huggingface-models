@@ -17,7 +17,7 @@ class LightningImageClassifier(LightningBaseModel):
     ----------
     model_name : str
         Name of the model checkpoint.
-    data_dir : str
+    data_dir : str or None
         Directory for storing the checkpoint.
     num_labels : int
         Number of target labels.

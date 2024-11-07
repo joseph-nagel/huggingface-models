@@ -18,7 +18,11 @@ class LightningBaseModel(LightningModule):
 
     '''
 
-    def __init__(self, model: nn.Module, lr: float = 1e-04) -> None:
+    def __init__(
+        self,
+        model: nn.Module,
+        lr: float = 1e-04
+    ) -> None:
 
         super().__init__()
 
