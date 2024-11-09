@@ -20,6 +20,8 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 - [timm](notebooks/timm.ipynb)
 
+- [transformers: LLM-based chatbot](notebooks/transformers_chat.ipynb)
+
 - [transformers: Image classification](notebooks/transformers_classif.ipynb)
 
 - [transformers: Object detection](notebooks/transformers_detect.ipynb)
