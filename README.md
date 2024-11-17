@@ -14,6 +14,7 @@ In a number of notebooks, it is shown how to import a model and make predictions
 Beyond that, a dedicated demonstration of transfer learning is provided.
 This example uses PyTorch and Lightning on top of the transformers library.
 
+
 ## Notebooks
 
 - [diffusers](notebooks/diffusers.ipynb)
@@ -30,11 +31,13 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 - [transformers: Transfer learning](notebooks/transformers_transfer.ipynb)
 
+
 ## Installation
 
 ```
 pip install -e .
 ```
+
 
 ## Training
 

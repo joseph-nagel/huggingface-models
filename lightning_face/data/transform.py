@@ -1,6 +1,6 @@
 '''Data transformations.'''
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 
 from PIL import Image
 import torch
