@@ -1,5 +1,6 @@
 '''CIFAR datamodules.'''
 
+import torch
 from torchvision import transforms
 from datasets import load_dataset
 
@@ -75,6 +76,17 @@ class CIFAR10DataModule(BaseDataModule):
             batch_size=batch_size,
             num_workers=num_workers
         )
+
+        # create inverse normalization
+        img_mean = torch.as_tensor(img_mean).view(-1, 1, 1)
+        img_std = torch.as_tensor(img_std).view(-1, 1, 1)
+
+        self.renormalize = transforms.Compose([
+            # reverse normalization
+            transforms.Lambda(lambda x: x * img_std + img_mean),
+            # clip to valid range
+            transforms.Lambda(lambda x: x.clamp(0, 1))
+        ])
 
         # set data location
         self.data_dir = data_dir
