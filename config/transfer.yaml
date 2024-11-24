@@ -6,10 +6,10 @@ data:
   class_path: "lightning_face.CIFAR10DataModule"
   init_args:
     data_dir: "run/data/"
-    img_size: 224
+    img_size: [224, 224]
     img_mean: [0.485, 0.456, 0.406]
     img_std: [0.229, 0.224, 0.225]
-    tiny: False
+    tiny: false
     random_state: 42
     batch_size: 32
     num_workers: 0

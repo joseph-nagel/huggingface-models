@@ -42,7 +42,7 @@ class CIFAR10DataModule(BaseDataModule):
     def __init__(
         self,
         data_dir: str | None = None,
-        img_size: IntOrInts = 224,
+        img_size: IntOrInts = (224, 224),
         img_mean: FloatOrFloats = (0.5, 0.5, 0.5),
         img_std: FloatOrFloats = (0.5, 0.5, 0.5),
         random_state: int = 42,
@@ -82,10 +82,8 @@ class CIFAR10DataModule(BaseDataModule):
         img_std = torch.as_tensor(img_std).view(-1, 1, 1)
 
         self.renormalize = transforms.Compose([
-            # reverse normalization
-            transforms.Lambda(lambda x: x * img_std + img_mean),
-            # clip to valid range
-            transforms.Lambda(lambda x: x.clamp(0, 1))
+            transforms.Lambda(lambda x: x * img_std + img_mean), # reverse normalization
+            transforms.Lambda(lambda x: x.clamp(0, 1)) # clip to valid range
         ])
 
         # set data location

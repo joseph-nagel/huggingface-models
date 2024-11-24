@@ -35,13 +35,11 @@ class LightningImageClassifier(LightningBaseModel):
     ) -> None:
 
         # load pretrained model
-        ignore_mismatched_sizes = False if num_labels is None else True
-
         model = AutoModelForImageClassification.from_pretrained(
             model_name,
             cache_dir=data_dir,
             num_labels=num_labels,
-            ignore_mismatched_sizes=ignore_mismatched_sizes
+            ignore_mismatched_sizes=False if num_labels is None else True
         )
 
         model = model.eval()

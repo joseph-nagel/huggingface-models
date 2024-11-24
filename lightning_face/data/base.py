@@ -83,6 +83,8 @@ class BaseDataModule(LightningDataModule):
             raise ValueError('Invalid combination of transforms')
 
     def train_dataloader(self) -> DataLoader:
+        '''Create train dataloader.'''
+
         if hasattr(self, 'train_ds') and self.train_ds is not None:
             return DataLoader(
                 self.train_ds, # DataLoaders accept datasets.Dataset objects
@@ -96,6 +98,8 @@ class BaseDataModule(LightningDataModule):
             raise AttributeError('Train set has not been set')
 
     def val_dataloader(self) -> DataLoader:
+        '''Create val. dataloader.'''
+
         if hasattr(self, 'val_ds') and self.val_ds is not None:
             return DataLoader(
                 self.val_ds,
@@ -109,6 +113,8 @@ class BaseDataModule(LightningDataModule):
             raise AttributeError('Val. set has not been set')
 
     def test_dataloader(self) -> DataLoader:
+        '''Create test dataloader.'''
+
         if hasattr(self, 'test_ds') and self.test_ds is not None:
             return DataLoader(
                 self.test_ds,
