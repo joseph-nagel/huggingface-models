@@ -29,7 +29,9 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 - [transformers: Transfer learning](notebooks/transformers_cv_transfer.ipynb)
 
-- [transformers: autoregressive LMs](notebooks/transformers_lm_autoreg.ipynb)
+- [transformers: Autoregressive LMs](notebooks/transformers_lm_autoreg.ipynb)
+
+- [transformers: Bidirectional LMs](notebooks/transformers_lm_bidirect.ipynb)
 
 
 ## Installation
