@@ -3,7 +3,7 @@ seed_everything: null
 ckpt_path: null
 
 data:
-  class_path: "lightning_face.CIFAR10DataModule"
+  class_path: "hf_utils.CIFAR10DataModule"
   init_args:
     data_dir: "run/data/"
     img_size: [224, 224]
@@ -15,7 +15,7 @@ data:
     num_workers: 0
 
 model:
-  class_path: "lightning_face.LightningImageClassifier"
+  class_path: "hf_utils.LightningImageClassifier"
   init_args:
     model_name: "microsoft/resnet-18"
     data_dir: "run/data/"
