@@ -1,6 +1,6 @@
 '''Hugging Face utilities.'''
 
-from . import lightning_face
+from . import lightning_face, torch_face
 
 from .lightning_face import (
     BaseDataModule,
@@ -9,4 +9,6 @@ from .lightning_face import (
     LightningBaseModel,
     LightningImageClassifier
 )
+
+from .torch_face import DistilBertClassifier
 
