@@ -10,5 +10,8 @@ from .lightning_face import (
     LightningImageClassifier
 )
 
-from .torch_face import DistilBertClassifier
+from .torch_face import (
+    DistilGPT2SeqClassif,
+    DistilBertSeqClassif
+)
 

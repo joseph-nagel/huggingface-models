@@ -1,11 +1,11 @@
-'''Sequence classifiers.'''
+'''BERT-like sequence classifiers.'''
 
 import torch
 import torch.nn as nn
 from transformers import DistilBertModel
 
 
-class DistilBertClassifier(nn.Module):
+class DistilBertSeqClassif(nn.Module):
     '''Sequence classifier with custom head.'''
 
     def __init__(
@@ -37,10 +37,11 @@ class DistilBertClassifier(nn.Module):
 
         features = features_out['last_hidden_state'] # (batch, sequence, features)
 
-        classif_token_features = features[:, 0] # (batch, features)
+        # get CLS token (first item of the sequence)
+        cls_token_features = features[:, 0] # (batch, features)
 
         # compute logits
-        logits = self.classif_head(classif_token_features) # (batch, labels)
+        logits = self.classif_head(cls_token_features) # (batch, labels)
 
         return logits
 
