@@ -11,6 +11,12 @@ from .lightning_face import (
 )
 
 from .torch_face import (
+    ACTIVATIONS,
+    make_activation,
+    make_block,
+    make_dropout,
+    make_dense,
+    DenseBlock,
     DistilGPT2SeqClassif,
     DistilBertSeqClassif
 )

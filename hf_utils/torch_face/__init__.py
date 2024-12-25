@@ -1,8 +1,23 @@
 '''PyTorch tools for Hugging Face models.'''
 
-from . import gpt_like, bert_like
+from . import (
+    autoreg,
+    bidirect,
+    dense,
+    utils
+)
 
-from .gpt_like import DistilGPT2SeqClassif
+from .autoreg import DistilGPT2SeqClassif
 
-from .bert_like import DistilBertSeqClassif
+from .bidirect import DistilBertSeqClassif
+
+from .dense import DenseBlock
+
+from .utils import (
+    ACTIVATIONS,
+    make_activation,
+    make_block,
+    make_dropout,
+    make_dense
+)
 

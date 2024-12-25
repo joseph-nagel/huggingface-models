@@ -1,8 +1,13 @@
-'''BERT-like sequence classifiers.'''
+'''Bidirectional BERT-like sequence classifiers.'''
+
+from collections.abc import Sequence
+from numbers import Number
 
 import torch
 import torch.nn as nn
 from transformers import DistilBertModel
+
+from .dense import ActivType, DenseBlock
 
 
 class DistilBertSeqClassif(nn.Module):
@@ -10,7 +15,10 @@ class DistilBertSeqClassif(nn.Module):
 
     def __init__(
         self,
-        num_labels: int
+        num_labels: int,
+        num_hidden: int | Sequence[int] | None = None,
+        activation: ActivType | None = 'leaky_relu',
+        drop_rate: float | None = None
     ) -> None:
 
         super().__init__()
@@ -21,7 +29,25 @@ class DistilBertSeqClassif(nn.Module):
         )
 
         # create classification head
-        self.classif_head = nn.Linear(768, num_labels)
+        if num_hidden is None:
+            num_hidden = []
+
+        elif isinstance(num_hidden, Number):
+            num_hidden = [num_hidden]
+
+        if isinstance(num_hidden, Sequence):
+            num_features = [768, *num_hidden, num_labels]
+        else:
+            raise TypeError(f'Invalid type : {type(num_hidden)}')
+
+        self.classif_head = DenseBlock(
+            num_features=num_features,
+            batchnorm=False,
+            activation=activation,
+            last_activation=None,
+            normalize_last=False,
+            drop_rate=drop_rate
+        )
 
     def forward(
         self,
