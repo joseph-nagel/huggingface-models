@@ -7,7 +7,7 @@ from .lightning_face import (
     CIFAR10DataModule,
     DataTransform,
     LightningBaseModel,
-    LightningImageClassifier
+    LightningImgClassif
 )
 
 from .torch_face import (

@@ -15,7 +15,7 @@ data:
     num_workers: 0
 
 model:
-  class_path: "hf_utils.LightningImageClassifier"
+  class_path: "hf_utils.LightningImgClassif"
   init_args:
     model_name: "microsoft/resnet-18"
     data_dir: "run/data/"

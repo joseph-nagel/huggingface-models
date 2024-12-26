@@ -36,18 +36,23 @@ class DistilGPT2SeqClassif(nn.Module):
             num_hidden = [num_hidden]
 
         if isinstance(num_hidden, Sequence):
-            num_features = [768, *num_hidden, num_labels]
+            num_features = [self.embed_dim, *num_hidden, num_labels]
         else:
             raise TypeError(f'Invalid type : {type(num_hidden)}')
 
         self.classif_head = DenseBlock(
             num_features=num_features,
-            batchnorm=False,
             activation=activation,
             last_activation=None,
+            batchnorm=False,
             normalize_last=False,
             drop_rate=drop_rate
         )
+
+    @property
+    def embed_dim(self):
+        '''Get feature dimensionality.'''
+        return self.feature_extractor.embed_dim # self.feature_extractor.config.n_embd
 
     def forward(
         self,

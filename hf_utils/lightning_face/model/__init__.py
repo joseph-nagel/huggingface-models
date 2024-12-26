@@ -4,5 +4,5 @@ from . import base
 
 from .base import LightningBaseModel
 
-from .classif import LightningImageClassifier
+from .classif import LightningImgClassif
 

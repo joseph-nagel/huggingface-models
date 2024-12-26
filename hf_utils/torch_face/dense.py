@@ -13,9 +13,9 @@ class DenseBlock(nn.Sequential):
     def __init__(
         self,
         num_features: Sequence[int],
-        batchnorm: bool = False,
         activation: ActivType | None = 'leaky_relu',
         last_activation: ActivType | None = None,
+        batchnorm: bool = False,
         normalize_last: bool = True,
         drop_rate: float | None = None
     ) -> None:
@@ -39,8 +39,8 @@ class DenseBlock(nn.Sequential):
             dense = make_dense(
                 in_features,
                 out_features,
-                batchnorm=batchnorm if is_not_last else (batchnorm and normalize_last),
                 activation=activation if is_not_last else last_activation,
+                batchnorm=batchnorm if is_not_last else (batchnorm and normalize_last),
                 drop_rate=drop_rate
             )
 

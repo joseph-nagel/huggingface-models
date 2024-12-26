@@ -21,7 +21,7 @@ from lightning.pytorch.callbacks import (
     StochasticWeightAveraging
 )
 
-from hf_utils import CIFAR10DataModule, LightningImageClassifier
+from hf_utils import CIFAR10DataModule, LightningImgClassif
 
 
 def parse_args():
@@ -99,7 +99,7 @@ def main(args):
     )
 
     # initialize model
-    model = LightningImageClassifier(
+    model = LightningImgClassif(
         model_name=args.model_name,
         data_dir=args.data_dir,
         num_labels=args.num_labels,

@@ -1,4 +1,4 @@
-'''PyTorch utilities..'''
+'''PyTorch utilities.'''
 
 from typing import Any
 from collections.abc import Sequence
@@ -7,7 +7,7 @@ from inspect import isclass
 import torch.nn as nn
 
 
-# define type aliases
+# define type alias
 ActivType = str | type[nn.Module]
 
 
@@ -81,8 +81,8 @@ def make_dense(
     in_features: int,
     out_features: int,
     bias: bool = True,
-    batchnorm: bool = False,
     activation: ActivType | None = None,
+    batchnorm: bool = False,
     drop_rate: float | None = None
 ) -> nn.Module:
     '''
@@ -96,10 +96,10 @@ def make_dense(
         Number of outputs.
     bias : bool
         Determines whether a bias is used.
-    batchnorm : bool
-        Determines whether batchnorm is used.
     activation : str or None
         Nonlinearity type.
+    batchnorm : bool
+        Determines whether batchnorm is used.
     drop_rate : float or None
         Dropout probability.
 

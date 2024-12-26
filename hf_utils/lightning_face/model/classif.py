@@ -9,7 +9,7 @@ from transformers import AutoModelForImageClassification
 from .base import LightningBaseModel
 
 
-class LightningImageClassifier(LightningBaseModel):
+class LightningImgClassif(LightningBaseModel):
     '''
     Lightning wrapper for a Hugging Face image classifier.
 

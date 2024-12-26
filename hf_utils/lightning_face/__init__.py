@@ -10,6 +10,6 @@ from .data import (
 
 from .model import (
     LightningBaseModel,
-    LightningImageClassifier
+    LightningImgClassif
 )
 
