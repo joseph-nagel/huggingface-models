@@ -7,6 +7,7 @@ def load_yelp(
     random_seed: int = 42,
     tiny: bool = False
 ) -> DatasetDict:
+    '''Load Yelp dataset.'''
 
     # load data
     ds = load_dataset('yelp_review_full')
@@ -34,13 +35,48 @@ def load_yelp(
 
     # return tiny datasets
     else:
-        tiny_train_ds = train_ds.shuffle(seed=23).select(range(1000))
-        tiny_val_ds = val_ds.shuffle(seed=23).select(range(200))
-        tiny_test_ds = test_ds.shuffle(seed=23).select(range(200))
-
         return DatasetDict({
-            'train': tiny_train_ds,
-            'val': tiny_val_ds,
-            'test': tiny_test_ds
+            'train': train_ds.shuffle(seed=23).select(range(1000)),
+            'val': val_ds.shuffle(seed=23).select(range(200)),
+            'test': test_ds.shuffle(seed=23).select(range(200))
+        })
+
+
+def load_imdb(
+    random_seed: int = 42,
+    tiny: bool = False
+) -> DatasetDict:
+    '''Load IMDB dataset.'''
+
+    # load data
+    ds = load_dataset('imdb')
+
+    # split data
+    train_ds = ds['train']
+
+    test_ds = ds['test']
+
+    split_ds = test_ds.train_test_split(
+        test_size=10000,
+        seed=random_seed
+    )
+
+    val_ds = split_ds['train']
+    test_ds = split_ds['test']
+
+    # return datasets
+    if not tiny:
+        return DatasetDict({
+            'train': train_ds,
+            'val': val_ds,
+            'test': test_ds
+        })
+
+    # return tiny datasets
+    else:
+        return DatasetDict({
+            'train': train_ds.shuffle(seed=23).select(range(1000)),
+            'val': val_ds.shuffle(seed=23).select(range(200)),
+            'test': test_ds.shuffle(seed=23).select(range(200))
         })
 

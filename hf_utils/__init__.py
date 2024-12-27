@@ -6,7 +6,7 @@ from . import (
     torch_face
 )
 
-from .data import load_yelp
+from .data import load_yelp, load_imdb
 
 from .lightning_face import (
     BaseDataModule,
