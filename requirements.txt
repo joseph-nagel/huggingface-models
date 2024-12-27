@@ -6,10 +6,11 @@ lightning
 tensorboard
 mlflow
 timm
-transformers
 diffusers
-accelerate
+transformers
 datasets
+accelerate
+evaluate
 matplotlib
 notebook
 
