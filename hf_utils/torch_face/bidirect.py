@@ -25,7 +25,7 @@ class DistilBertSeqClassif(nn.Module):
 
         # create feature extractor
         self.feature_extractor = DistilBertModel.from_pretrained(
-            'distilbert-base-uncased'
+            'distilbert/distilbert-base-uncased'
         )
 
         # create classification head

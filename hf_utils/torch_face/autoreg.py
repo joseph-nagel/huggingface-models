@@ -25,7 +25,7 @@ class DistilGPT2SeqClassif(nn.Module):
 
         # create feature extractor
         self.feature_extractor = GPT2Model.from_pretrained(
-            'distilgpt2'
+            'distilbert/distilgpt2'
         )
 
         # create classification head
