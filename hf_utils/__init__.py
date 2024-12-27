@@ -1,6 +1,12 @@
 '''Hugging Face utilities.'''
 
-from . import lightning_face, torch_face
+from . import (
+    data,
+    lightning_face,
+    torch_face
+)
+
+from .data import load_yelp
 
 from .lightning_face import (
     BaseDataModule,
