@@ -49,6 +49,13 @@ class DistilGPT2SeqClassif(nn.Module):
             drop_rate=drop_rate
         )
 
+        # freeze/unfreeze parameters
+        for p in self.feature_extractor.parameters():
+            p.requires_grad = False
+
+        for p in self.classif_head.parameters():
+            p.requires_grad = True
+
     @property
     def embed_dim(self):
         '''Get feature dimensionality.'''
