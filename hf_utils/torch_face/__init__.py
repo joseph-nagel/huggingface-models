@@ -2,12 +2,15 @@
 
 from . import (
     autoreg,
+    base,
     bidirect,
     dense,
     utils
 )
 
 from .autoreg import DistilGPT2SeqClassif
+
+from .base import SeqClassifBaseModel
 
 from .bidirect import DistilBertSeqClassif
 

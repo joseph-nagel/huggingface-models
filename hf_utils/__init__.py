@@ -23,6 +23,7 @@ from .torch_face import (
     make_dropout,
     make_dense,
     DenseBlock,
+    SeqClassifBaseModel,
     DistilGPT2SeqClassif,
     DistilBertSeqClassif
 )

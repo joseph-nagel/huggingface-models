@@ -4,24 +4,45 @@ from collections.abc import Sequence
 from numbers import Number
 
 import torch
-import torch.nn as nn
 from transformers import GPT2Model
 
+from .base import SeqClassifBaseModel
 from .dense import ActivType, DenseBlock
 
 
-class DistilGPT2SeqClassif(nn.Module):
-    '''Sequence classifier with custom head.'''
+class DistilGPT2SeqClassif(SeqClassifBaseModel):
+    '''
+    GPT-like sequence classifier with custom head.
+
+    Parameters
+    -----------
+    num_labels : int
+        Number of labels.
+    label_names : list or tuple
+        Label names.
+    num_hidden : int, list or None
+        Number of hidden units.
+    activation : str or None
+        Nonlinearity type.
+    drop_rate : float or None
+        Dropout probability.
+
+    '''
 
     def __init__(
         self,
         num_labels: int,
+        label_names: Sequence[str] | None = None,
         num_hidden: int | Sequence[int] | None = None,
         activation: ActivType | None = 'leaky_relu',
         drop_rate: float | None = None
     ) -> None:
 
-        super().__init__()
+        # call base class init
+        super().__init__(
+            num_labels=num_labels,
+            label_names=label_names
+        )
 
         # create feature extractor
         self.feature_extractor = GPT2Model.from_pretrained(

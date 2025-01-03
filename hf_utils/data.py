@@ -36,9 +36,9 @@ def load_yelp(
     # return tiny datasets
     else:
         return DatasetDict({
-            'train': train_ds.shuffle(seed=23).select(range(1000)),
-            'val': val_ds.shuffle(seed=23).select(range(200)),
-            'test': test_ds.shuffle(seed=23).select(range(200))
+            'train': train_ds.shuffle(seed=23).select(range(100)),
+            'val': val_ds.shuffle(seed=23).select(range(20)),
+            'test': test_ds.shuffle(seed=23).select(range(20))
         })
 
 
@@ -75,8 +75,8 @@ def load_imdb(
     # return tiny datasets
     else:
         return DatasetDict({
-            'train': train_ds.shuffle(seed=23).select(range(1000)),
-            'val': val_ds.shuffle(seed=23).select(range(200)),
-            'test': test_ds.shuffle(seed=23).select(range(200))
+            'train': train_ds.shuffle(seed=23).select(range(100)),
+            'val': val_ds.shuffle(seed=23).select(range(20)),
+            'test': test_ds.shuffle(seed=23).select(range(20))
         })
 
