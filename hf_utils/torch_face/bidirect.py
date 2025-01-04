@@ -1,5 +1,6 @@
 '''Bidirectional BERT-like sequence classifiers.'''
 
+from typing import Any
 from collections.abc import Sequence
 from numbers import Number
 
@@ -15,7 +16,7 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
     BERT-like sequence classifier with custom head.
 
     Parameters
-    -----------
+    ----------
     num_labels : int
         Number of labels.
     label_names : list or tuple
@@ -28,6 +29,8 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
         Dropout probability.
 
     '''
+
+    model_name = 'distilbert/distilbert-base-uncased'
 
     def __init__(
         self,
@@ -46,7 +49,7 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
 
         # create feature extractor
         self.feature_extractor = DistilBertModel.from_pretrained(
-            'distilbert/distilbert-base-uncased'
+            self.model_name
         )
 
         # create classification head
@@ -57,7 +60,11 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
             num_hidden = [num_hidden]
 
         if isinstance(num_hidden, Sequence):
-            num_features = [self.embed_dim, *num_hidden, num_labels]
+            num_features = [
+                self.embed_dim, # number of inputs
+                *num_hidden, # number of hidden units
+                num_labels if num_labels > 2 else 1 # number of outputs
+            ]
         else:
             raise TypeError(f'Invalid type : {type(num_hidden)}')
 
@@ -85,13 +92,15 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
     def forward(
         self,
         input_ids: torch.Tensor,
-        attention_mask: torch.Tensor | None = None
+        attention_mask: torch.Tensor | None = None,
+        **kwargs: Any
     ) -> torch.Tensor:
 
         # extract features
         features_out = self.feature_extractor(
             input_ids=input_ids,
-            attention_mask=attention_mask
+            attention_mask=attention_mask,
+            **kwargs
         )
 
         features = features_out['last_hidden_state'] # (batch, sequence, features)

@@ -8,7 +8,25 @@ from .utils import ActivType, make_dense
 
 
 class DenseBlock(nn.Sequential):
-    '''Block of multiple dense layers.'''
+    '''
+    Block of multiple dense layers.
+
+    Parameters
+    ----------
+    num_features : list of tuple
+        Number of features.
+    activation : str or None
+        Nonlinearity type.
+    last_activation : str or None
+        Last nonlinearity type.
+    batchnorm : bool
+        Determines whether batchnorm is used.
+    normalize_last : bool
+        Determines whether batchnorm is used last.
+    drop_rate : float or None
+        Dropout probability.
+
+    '''
 
     def __init__(
         self,

@@ -1,6 +1,7 @@
 '''Base model.'''
 
 from abc import ABC, abstractmethod
+from typing import Any
 from collections.abc import Sequence
 
 import torch
@@ -12,7 +13,7 @@ class SeqClassifBaseModel(nn.Module, ABC):
     Base model for transfer learning sequence classification.
 
     Parameters
-    -----------
+    ----------
     num_labels : int
         Number of labels.
     label_names : list or tuple
@@ -28,6 +29,17 @@ class SeqClassifBaseModel(nn.Module, ABC):
 
         super().__init__()
 
+        # create loss function
+        if num_labels == 2:
+            self.criterion = nn.BCEWithLogitsLoss(reduction='mean')
+
+        elif num_labels > 2:
+            self.criterion = nn.CrossEntropyLoss(reduction='mean')
+
+        else:
+            raise ValueError('Invalid number of labels')
+
+        # set label names
         if label_names is None:
             self.label_names = list(range(num_labels))
 
@@ -53,6 +65,11 @@ class SeqClassifBaseModel(nn.Module, ABC):
         return {label: idx for idx, label in enumerate(self.label_names)}
 
     @abstractmethod
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        input_ids: torch.Tensor,
+        attention_mask: torch.Tensor | None = None,
+        **kwargs: Any
+    ) -> torch.Tensor:
         raise NotImplementedError
 
