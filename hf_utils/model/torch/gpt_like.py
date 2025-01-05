@@ -7,8 +7,8 @@ from numbers import Number
 import torch
 from transformers import GPT2Model
 
+from ...layers import ActivType, DenseBlock
 from .base import SeqClassifBaseModel
-from .dense import ActivType, DenseBlock
 
 
 class DistilGPT2SeqClassif(SeqClassifBaseModel):

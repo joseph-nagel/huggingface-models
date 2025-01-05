@@ -1,4 +1,4 @@
-'''Data.'''
+'''Datamodules.'''
 
 from . import base, cifar, transform
 

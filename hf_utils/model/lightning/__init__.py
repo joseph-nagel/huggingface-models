@@ -1,6 +1,6 @@
-'''Models.'''
+'''Lightning for Hugging Face models.'''
 
-from . import base
+from . import base, classif
 
 from .base import LightningBaseModel
 

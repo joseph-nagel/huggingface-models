@@ -7,8 +7,8 @@ from numbers import Number
 import torch
 from transformers import DistilBertModel
 
+from ...layers import ActivType, DenseBlock
 from .base import SeqClassifBaseModel
-from .dense import ActivType, DenseBlock
 
 
 class DistilBertSeqClassif(SeqClassifBaseModel):

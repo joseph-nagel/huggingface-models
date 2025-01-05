@@ -75,7 +75,7 @@ class LightningImgClassif(LightningBaseModel):
         batch: dict[str, torch.Tensor],
         return_logits: bool = False
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
-        '''Compute loss (and return logits).'''
+        '''Compute loss (and optionally return logits).'''
 
         outputs = self.model(**batch)
 

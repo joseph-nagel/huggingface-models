@@ -2,29 +2,33 @@
 
 from . import (
     data,
-    lightning_face,
-    torch_face
+    layers,
+    model
 )
 
-from .data import load_yelp, load_imdb
-
-from .lightning_face import (
+from .data import (
+    load_yelp,
+    load_imdb,
     BaseDataModule,
     CIFAR10DataModule,
-    DataTransform,
-    LightningBaseModel,
-    LightningImgClassif
+    DataTransform
 )
 
-from .torch_face import (
+from .layers import (
+    ActivType,
     ACTIVATIONS,
     make_activation,
     make_block,
     make_dropout,
     make_dense,
-    DenseBlock,
+    DenseBlock
+)
+
+from .model import (
+    LightningBaseModel,
+    LightningImgClassif,
     SeqClassifBaseModel,
-    DistilGPT2SeqClassif,
-    DistilBertSeqClassif
+    DistilBertSeqClassif,
+    DistilGPT2SeqClassif
 )
 

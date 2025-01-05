@@ -1,4 +1,4 @@
-'''Data tools.'''
+'''Data downloading.'''
 
 from datasets import load_dataset, DatasetDict
 
