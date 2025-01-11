@@ -93,8 +93,9 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
         self,
         input_ids: torch.Tensor,
         attention_mask: torch.Tensor | None = None,
+        labels: torch.Tensor | None = None,
         **kwargs: Any
-    ) -> torch.Tensor:
+    ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
 
         # compute embedding
         base_out = self.base_model(
@@ -111,5 +112,17 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
         # compute logits
         logits = self.classif_head(cls_token) # (batch, labels)
 
-        return logits
+        if labels is None:
+            return logits
+
+        # compute loss
+        else:
+            # for a single output unit, this uses nn.BCEWithLogitsLoss
+            if logits.shape[-1] == 1:
+                loss = self.criterion(logits.squeeze(-1), labels.to(logits.dtype))
+            # for multiple output units, nn.CrossEntropyLoss is used
+            else:
+                loss = self.criterion(logits, labels)
+
+            return loss, logits # this is compatible with transformers.Trainer
 

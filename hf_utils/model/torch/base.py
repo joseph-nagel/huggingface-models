@@ -69,7 +69,8 @@ class SeqClassifBaseModel(nn.Module, ABC):
         self,
         input_ids: torch.Tensor,
         attention_mask: torch.Tensor | None = None,
+        labels: torch.Tensor | None = None,
         **kwargs: Any
-    ) -> torch.Tensor:
+    ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         raise NotImplementedError
 
