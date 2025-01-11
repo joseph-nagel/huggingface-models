@@ -33,6 +33,8 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 - [transformers: Bidirectional LMs](notebooks/transformers_lm_bidirect.ipynb)
 
+- [transformers: LM finetuning](notebooks/transformers_lm_finetune.ipynb)
+
 
 ## Installation
 

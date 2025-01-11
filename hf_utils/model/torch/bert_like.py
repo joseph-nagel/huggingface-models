@@ -66,7 +66,7 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
                 num_labels if num_labels > 2 else 1 # number of outputs
             ]
         else:
-            raise TypeError(f'Invalid type : {type(num_hidden)}')
+            raise TypeError(f'Invalid type: {type(num_hidden)}')
 
         self.classif_head = DenseBlock(
             num_features=num_features,
@@ -85,26 +85,24 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
             p.requires_grad = True
 
     @property
-    def embed_dim(self):
-        '''Get feature dimensionality.'''
+    def embed_dim(self) -> int:
+        '''Get embedding dimensionality.'''
         return self.base_model.config.dim
 
     def forward(
         self,
         input_ids: torch.Tensor,
         attention_mask: torch.Tensor | None = None,
-        labels: torch.Tensor | None = None,
-        **kwargs: Any
+        labels: torch.Tensor | None = None
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
 
         # compute embedding
         base_out = self.base_model(
             input_ids=input_ids,
-            attention_mask=attention_mask,
-            **kwargs
+            attention_mask=attention_mask
         )
 
-        last_hidden_state = base_out['last_hidden_state'] # (batch, sequence, features)
+        last_hidden_state = base_out.last_hidden_state # (batch, sequence, features)
 
         # get CLS token (first item of the sequence)
         cls_token = last_hidden_state[:, 0] # (batch, features)

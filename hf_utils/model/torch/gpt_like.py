@@ -66,7 +66,7 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
                 num_labels if num_labels > 2 else 1 # number of outputs
             ]
         else:
-            raise TypeError(f'Invalid type : {type(num_hidden)}')
+            raise TypeError(f'Invalid type: {type(num_hidden)}')
 
         self.classif_head = DenseBlock(
             num_features=num_features,
@@ -85,26 +85,28 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
             p.requires_grad = True
 
     @property
-    def embed_dim(self):
-        '''Get feature dimensionality.'''
-        return self.base_model.embed_dim # self.feature_extractor.config.n_embd
+    def embed_dim(self) -> int:
+        '''Get embedding dimensionality.'''
+        return self.base_model.embed_dim # self.base_model.config.n_embd
 
     def forward(
         self,
         input_ids: torch.Tensor,
         attention_mask: torch.Tensor | None = None,
-        labels: torch.Tensor | None = None,
-        **kwargs: Any
+        labels: torch.Tensor | None = None
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
+
+        # check for pad token and batch size
+        if self.base_model.config.pad_token_id is None and len(input_ids) > 1:
+            raise RuntimeError('Pad token required for batch sizes larger than one')
 
         # compute embedding
         base_out = self.base_model(
             input_ids=input_ids,
-            attention_mask=attention_mask,
-            **kwargs
+            attention_mask=attention_mask
         )
 
-        last_hidden_state = base_out['last_hidden_state'] # (batch, sequence, features)
+        last_hidden_state = base_out.last_hidden_state # (batch, sequence, features)
 
         # get last token (which is not padded)
         if self.base_model.config.pad_token_id is None:

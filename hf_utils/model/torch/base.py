@@ -55,6 +55,16 @@ class SeqClassifBaseModel(nn.Module, ABC):
         return len(self.label_names)
 
     @property
+    def is_binary(self) -> bool:
+        '''Check binary classifcation.'''
+        return self.num_labels == 2
+
+    @property
+    def is_multiclass(self) -> bool:
+        '''Check multiclass classification.'''
+        return self.num_labels > 2
+
+    @property
     def id2label(self) -> dict[int, str]:
         '''Get idx-to-label dict.'''
         return {idx: label for idx, label in enumerate(self.label_names)}
@@ -63,6 +73,12 @@ class SeqClassifBaseModel(nn.Module, ABC):
     def label2id(self) -> dict[str, int]:
         '''Get label-to-idx dict.'''
         return {label: idx for idx, label in enumerate(self.label_names)}
+
+    @property
+    @abstractmethod
+    def embed_dim(self) -> int:
+        '''Get embedding dimensionality.'''
+        raise NotImplementedError
 
     @abstractmethod
     def forward(
