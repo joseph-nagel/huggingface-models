@@ -48,7 +48,7 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
         )
 
         # create feature extractor
-        self.feature_extractor = GPT2Model.from_pretrained(
+        self.base_model = GPT2Model.from_pretrained(
             self.model_name
         )
 
@@ -78,7 +78,7 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
         )
 
         # freeze/unfreeze parameters
-        for p in self.feature_extractor.parameters():
+        for p in self.base_model.parameters():
             p.requires_grad = False
 
         for p in self.classif_head.parameters():
@@ -87,7 +87,7 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
     @property
     def embed_dim(self):
         '''Get feature dimensionality.'''
-        return self.feature_extractor.embed_dim # self.feature_extractor.config.n_embd
+        return self.base_model.embed_dim # self.feature_extractor.config.n_embd
 
     def forward(
         self,
@@ -96,20 +96,30 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
         **kwargs: Any
     ) -> torch.Tensor:
 
-        # extract features
-        features_out = self.feature_extractor(
+        # compute embedding
+        base_out = self.base_model(
             input_ids=input_ids,
             attention_mask=attention_mask,
             **kwargs
         )
 
-        features = features_out['last_hidden_state'] # (batch, sequence, features)
+        last_hidden_state = base_out['last_hidden_state'] # (batch, sequence, features)
 
-        # get last token
-        last_token_features = features[:, -1] # (batch, features)
+        # get last token (which is not padded)
+        if self.base_model.config.pad_token_id is None:
+            last_token = last_hidden_state[:, -1] # (batch, features)
+
+        else:
+            first_padded_ids = (input_ids == self.base_model.config.pad_token_id).int().argmax(-1)
+            last_non_padded_ids = first_padded_ids - 1 # note that 0 becomes -1
+
+            last_token = last_hidden_state[
+                torch.arange(len(last_hidden_state), device=last_hidden_state.device),
+                last_non_padded_ids
+            ] # (batch, features)
 
         # compute logits
-        logits = self.classif_head(last_token_features) # (batch, labels)
+        logits = self.classif_head(last_token) # (batch, labels)
 
         return logits
 

@@ -48,7 +48,7 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
         )
 
         # create feature extractor
-        self.feature_extractor = DistilBertModel.from_pretrained(
+        self.base_model = DistilBertModel.from_pretrained(
             self.model_name
         )
 
@@ -78,7 +78,7 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
         )
 
         # freeze/unfreeze parameters
-        for p in self.feature_extractor.parameters():
+        for p in self.base_model.parameters():
             p.requires_grad = False
 
         for p in self.classif_head.parameters():
@@ -87,7 +87,7 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
     @property
     def embed_dim(self):
         '''Get feature dimensionality.'''
-        return self.feature_extractor.config.dim
+        return self.base_model.config.dim
 
     def forward(
         self,
@@ -96,20 +96,20 @@ class DistilBertSeqClassif(SeqClassifBaseModel):
         **kwargs: Any
     ) -> torch.Tensor:
 
-        # extract features
-        features_out = self.feature_extractor(
+        # compute embedding
+        base_out = self.base_model(
             input_ids=input_ids,
             attention_mask=attention_mask,
             **kwargs
         )
 
-        features = features_out['last_hidden_state'] # (batch, sequence, features)
+        last_hidden_state = base_out['last_hidden_state'] # (batch, sequence, features)
 
         # get CLS token (first item of the sequence)
-        cls_token_features = features[:, 0] # (batch, features)
+        cls_token = last_hidden_state[:, 0] # (batch, features)
 
         # compute logits
-        logits = self.classif_head(cls_token_features) # (batch, labels)
+        logits = self.classif_head(cls_token) # (batch, labels)
 
         return logits
 
