@@ -29,13 +29,13 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 - [transformers: Transfer learning](notebooks/transformers_cv_transfer.ipynb)
 
-- [transformers: Autoregressive LMs](notebooks/transformers_lm_gpt.ipynb)
+- [transformers: Autoregressive GPT-like LMs](notebooks/transformers_lm_gpt.ipynb)
 
-- [transformers: Bidirectional LMs](notebooks/transformers_lm_bert.ipynb)
+- [transformers: Bidirectional BERT-like LMs](notebooks/transformers_lm_bert.ipynb)
 
-- [transformers: Finetuning DistilBERT](notebooks/transformers_lm_bert_finetune.ipynb)
+- [transformers: Finetuning GPT-like LMs](notebooks/transformers_lm_gpt_finetune.ipynb)
 
-- [transformers: Finetuning GPT2](notebooks/transformers_lm_gpt_finetune.ipynb)
+- [transformers: Finetuning BERT-like LMs](notebooks/transformers_lm_bert_finetune.ipynb)
 
 
 ## Installation
