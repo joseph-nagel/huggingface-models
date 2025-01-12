@@ -52,6 +52,16 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
             self.model_name
         )
 
+        # set pad token (for batch sizes larger than one)
+        pad_token_id = self.base_model.config.pad_token_id
+        eos_token_id = self.base_model.config.eos_token_id
+
+        if pad_token_id is None:
+            if eos_token_id is not None:
+                self.base_model.config.pad_token_id = self.base_model.config.eos_token_id
+            else:
+                raise RuntimeError('Pad token required for batch sizes larger than one')
+
         # create classification head
         if num_hidden is None:
             num_hidden = []
