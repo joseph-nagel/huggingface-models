@@ -27,6 +27,8 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
         Nonlinearity type.
     drop_rate : float or None
         Dropout probability.
+    pad_token_id: int or None
+        Pad token ID.
 
     '''
 
@@ -38,7 +40,8 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
         label_names: Sequence[str] | None = None,
         num_hidden: int | Sequence[int] | None = None,
         activation: ActivType | None = 'leaky_relu',
-        drop_rate: float | None = None
+        drop_rate: float | None = None,
+        pad_token_id: int | None = None
     ) -> None:
 
         # call base class init
@@ -53,14 +56,11 @@ class DistilGPT2SeqClassif(SeqClassifBaseModel):
         )
 
         # set pad token (for batch sizes larger than one)
-        pad_token_id = self.base_model.config.pad_token_id
-        eos_token_id = self.base_model.config.eos_token_id
-
-        if pad_token_id is None:
-            if eos_token_id is not None:
+        if pad_token_id is not None:
+            if self.base_model.config.pad_token_id is None:
                 self.base_model.config.pad_token_id = self.base_model.config.eos_token_id
-            else:
-                raise RuntimeError('Pad token required for batch sizes larger than one')
+            elif self.base_model.config.pad_token_id != pad_token_id:
+                raise ValueError('Pad token ID mismatch')
 
         # create classification head
         if num_hidden is None:
