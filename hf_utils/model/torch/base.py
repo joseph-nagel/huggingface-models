@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 
 
-class ClassifBaseModel(nn.Module, ABC):
+class BaseClassif(nn.Module, ABC):
     '''
     Base model for transfer learning sequence classification.
 

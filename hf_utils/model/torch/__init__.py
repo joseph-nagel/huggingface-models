@@ -6,7 +6,7 @@ from . import (
     gpt_like
 )
 
-from .base import ClassifBaseModel
+from .base import BaseClassif
 
 from .bert_like import DistilBertClassif
 

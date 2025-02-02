@@ -8,7 +8,7 @@ from .lightning import (
 )
 
 from .torch import (
-    ClassifBaseModel,
+    BaseClassif,
     DistilBertClassif,
     DistilGPT2Classif
 )
