@@ -27,8 +27,8 @@ from .layers import (
 from .model import (
     LightningBaseModel,
     LightningImgClassif,
-    SeqClassifBaseModel,
-    DistilBertSeqClassif,
-    DistilGPT2SeqClassif
+    ClassifBaseModel,
+    DistilBertClassif,
+    DistilGPT2Classif
 )
 

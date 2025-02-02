@@ -8,10 +8,10 @@ import torch
 from transformers import DistilBertModel
 
 from ...layers import ActivType, DenseBlock
-from .base import SeqClassifBaseModel
+from .base import ClassifBaseModel
 
 
-class DistilBertSeqClassif(SeqClassifBaseModel):
+class DistilBertClassif(ClassifBaseModel):
     '''
     BERT-like sequence classifier with custom head.
 

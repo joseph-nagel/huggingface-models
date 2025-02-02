@@ -6,9 +6,9 @@ from . import (
     gpt_like
 )
 
-from .base import SeqClassifBaseModel
+from .base import ClassifBaseModel
 
-from .bert_like import DistilBertSeqClassif
+from .bert_like import DistilBertClassif
 
-from .gpt_like import DistilGPT2SeqClassif
+from .gpt_like import DistilGPT2Classif
 

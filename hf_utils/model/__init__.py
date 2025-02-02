@@ -8,8 +8,8 @@ from .lightning import (
 )
 
 from .torch import (
-    SeqClassifBaseModel,
-    DistilBertSeqClassif,
-    DistilGPT2SeqClassif
+    ClassifBaseModel,
+    DistilBertClassif,
+    DistilGPT2Classif
 )
 

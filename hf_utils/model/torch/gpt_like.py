@@ -8,10 +8,10 @@ import torch
 from transformers import GPT2Model
 
 from ...layers import ActivType, DenseBlock
-from .base import SeqClassifBaseModel
+from .base import ClassifBaseModel
 
 
-class DistilGPT2SeqClassif(SeqClassifBaseModel):
+class DistilGPT2Classif(ClassifBaseModel):
     '''
     GPT-like sequence classifier with custom head.
 
