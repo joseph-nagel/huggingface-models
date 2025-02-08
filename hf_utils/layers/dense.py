@@ -13,7 +13,7 @@ class DenseBlock(nn.Sequential):
 
     Parameters
     ----------
-    num_features : list of tuple
+    num_features : list or tuple
         Number of features.
     activation : str or None
         Nonlinearity type.
