@@ -18,23 +18,39 @@ class BaseClassif(nn.Module, ABC):
         Number of labels.
     label_names : list or tuple
         Label names.
+    class_weights : list, tuple or tensor
+        Class weights.
 
     '''
 
     def __init__(
         self,
         num_labels: int,
-        label_names: Sequence[str] | None = None
+        label_names: Sequence[str] | None = None,
+        class_weights: Sequence[float] | torch.Tensor | None = None
     ) -> None:
 
         super().__init__()
 
+        # set class weights
+        if class_weights is not None:
+            class_weights = torch.as_tensor(class_weights).view(-1)
+
+            if len(class_weights) != num_labels:
+                raise ValueError(f'Invalid number of class weights: {len(class_weights)}')
+
         # create loss function
         if num_labels == 2:
-            self.criterion = nn.BCEWithLogitsLoss(reduction='mean')
+            self.criterion = nn.BCEWithLogitsLoss(
+                reduction='mean',
+                pos_weight=class_weights
+            )
 
         elif num_labels > 2:
-            self.criterion = nn.CrossEntropyLoss(reduction='mean')
+            self.criterion = nn.CrossEntropyLoss(
+                reduction='mean',
+                weight=class_weights
+            )
 
         else:
             raise ValueError('Invalid number of labels')

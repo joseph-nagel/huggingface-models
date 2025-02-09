@@ -21,6 +21,8 @@ class DistilBertClassif(BaseClassif):
         Number of labels.
     label_names : list or tuple
         Label names.
+    class_weights : list, tuple or tensor
+        Class weights.
     num_hidden : int, list or None
         Number of hidden units.
     activation : str or None
@@ -36,6 +38,7 @@ class DistilBertClassif(BaseClassif):
         self,
         num_labels: int,
         label_names: Sequence[str] | None = None,
+        class_weights: Sequence[float] | torch.Tensor | None = None,
         num_hidden: int | Sequence[int] | None = None,
         activation: ActivType | None = 'leaky_relu',
         drop_rate: float | None = None
@@ -44,7 +47,8 @@ class DistilBertClassif(BaseClassif):
         # call base class init
         super().__init__(
             num_labels=num_labels,
-            label_names=label_names
+            label_names=label_names,
+            class_weights=class_weights
         )
 
         # create feature extractor
