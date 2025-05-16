@@ -1,6 +1,5 @@
 '''Autoregressive GPT-like sequence classifiers.'''
 
-from typing import Any
 from collections.abc import Sequence
 from numbers import Number
 

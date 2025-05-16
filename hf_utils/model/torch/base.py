@@ -72,7 +72,7 @@ class BaseClassif(nn.Module, ABC):
 
     @property
     def is_binary(self) -> bool:
-        '''Check binary classifcation.'''
+        '''Check binary classification.'''
         return self.num_labels == 2
 
     @property
