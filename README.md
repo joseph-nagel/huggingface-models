@@ -37,6 +37,8 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 - [transformers: Finetuning BERT-like LMs](notebooks/transformers_lm_bert_finetune.ipynb)
 
+- [transformers: Vision-language models](notebooks/transformers_vlm.ipynb)
+
 
 ## Installation
 
