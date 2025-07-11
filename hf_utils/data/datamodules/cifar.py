@@ -82,8 +82,8 @@ class CIFAR10DataModule(BaseDataModule):
         img_std = torch.as_tensor(img_std).view(-1, 1, 1)
 
         self.renormalize = transforms.Compose([
-            transforms.Lambda(lambda x: x * img_std + img_mean), # reverse normalization
-            transforms.Lambda(lambda x: x.clamp(0, 1)) # clip to valid range
+            transforms.Lambda(lambda x: x * img_std + img_mean),  # reverse normalization
+            transforms.Lambda(lambda x: x.clamp(0, 1))  # clip to valid range
         ])
 
         # set data location

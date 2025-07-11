@@ -55,7 +55,7 @@ class LightningBaseModel(LightningModule):
     ) -> torch.Tensor:
 
         loss = self.loss(batch)
-        self.log('train_loss', loss.item()) # Lightning logs batch-wise scalars during training per default
+        self.log('train_loss', loss.item())  # Lightning logs batch-wise scalars during training per default
 
         return loss
 
@@ -66,7 +66,7 @@ class LightningBaseModel(LightningModule):
     ) -> torch.Tensor:
 
         loss = self.loss(batch)
-        self.log('val_loss', loss.item()) # Lightning automatically averages scalars over batches for validation
+        self.log('val_loss', loss.item())  # Lightning automatically averages scalars over batches for validation
 
         return loss
 
@@ -77,7 +77,7 @@ class LightningBaseModel(LightningModule):
     ) -> torch.Tensor:
 
         loss = self.loss(batch)
-        self.log('test_loss', loss.item()) # Lightning automatically averages scalars over batches for testing
+        self.log('test_loss', loss.item())  # Lightning automatically averages scalars over batches for testing
 
         return loss
 

@@ -64,9 +64,9 @@ class DistilBertClassif(BaseClassif):
 
         if isinstance(num_hidden, Sequence):
             num_features = [
-                self.embed_dim, # number of inputs
-                *num_hidden, # number of hidden units
-                num_labels if num_labels > 2 else 1 # number of outputs
+                self.embed_dim,  # number of inputs
+                *num_hidden,  # number of hidden units
+                num_labels if num_labels > 2 else 1  # number of outputs
             ]
         else:
             raise TypeError(f'Invalid type: {type(num_hidden)}')
@@ -105,13 +105,13 @@ class DistilBertClassif(BaseClassif):
             attention_mask=attention_mask
         )
 
-        last_hidden_state = base_out.last_hidden_state # (batch, sequence, features)
+        last_hidden_state = base_out.last_hidden_state  # (batch, sequence, features)
 
         # get CLS token (first item of the sequence)
-        cls_token = last_hidden_state[:, 0] # (batch, features)
+        cls_token = last_hidden_state[:, 0]  # (batch, features)
 
         # compute logits
-        logits = self.classif_head(cls_token) # (batch, labels)
+        logits = self.classif_head(cls_token)  # (batch, labels)
 
         if labels is None:
             return logits
@@ -125,5 +125,5 @@ class DistilBertClassif(BaseClassif):
             else:
                 loss = self.criterion(logits, labels)
 
-            return loss, logits # this is compatible with transformers.Trainer
+            return loss, logits  # this is compatible with transformers.Trainer
 

@@ -74,9 +74,9 @@ class DistilGPT2Classif(BaseClassif):
 
         if isinstance(num_hidden, Sequence):
             num_features = [
-                self.embed_dim, # number of inputs
-                *num_hidden, # number of hidden units
-                num_labels if num_labels > 2 else 1 # number of outputs
+                self.embed_dim,  # number of inputs
+                *num_hidden,  # number of hidden units
+                num_labels if num_labels > 2 else 1  # number of outputs
             ]
         else:
             raise TypeError(f'Invalid type: {type(num_hidden)}')
@@ -100,7 +100,7 @@ class DistilGPT2Classif(BaseClassif):
     @property
     def embed_dim(self) -> int:
         '''Get embedding dimensionality.'''
-        return self.base_model.embed_dim # self.base_model.config.n_embd
+        return self.base_model.embed_dim  # self.base_model.config.n_embd
 
     def forward(
         self,
@@ -119,23 +119,23 @@ class DistilGPT2Classif(BaseClassif):
             attention_mask=attention_mask
         )
 
-        last_hidden_state = base_out.last_hidden_state # (batch, sequence, features)
+        last_hidden_state = base_out.last_hidden_state  # (batch, sequence, features)
 
         # get last token (which is not padded)
         if self.base_model.config.pad_token_id is None:
-            last_token = last_hidden_state[:, -1] # (batch, features)
+            last_token = last_hidden_state[:, -1]  # (batch, features)
 
         else:
             first_padded_ids = (input_ids == self.base_model.config.pad_token_id).int().argmax(-1)
-            last_non_padded_ids = first_padded_ids - 1 # note that 0 becomes -1
+            last_non_padded_ids = first_padded_ids - 1  # note that 0 becomes -1
 
             last_token = last_hidden_state[
                 torch.arange(len(last_hidden_state), device=last_hidden_state.device),
                 last_non_padded_ids
-            ] # (batch, features)
+            ]  # (batch, features)
 
         # compute logits
-        logits = self.classif_head(last_token) # (batch, labels)
+        logits = self.classif_head(last_token)  # (batch, labels)
 
         if labels is None:
             return logits
@@ -149,5 +149,5 @@ class DistilGPT2Classif(BaseClassif):
             else:
                 loss = self.criterion(logits, labels)
 
-            return loss, logits # this is compatible with transformers.Trainer
+            return loss, logits  # this is compatible with transformers.Trainer
 

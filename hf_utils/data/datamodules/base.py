@@ -87,7 +87,7 @@ class BaseDataModule(LightningDataModule):
 
         if hasattr(self, 'train_ds') and self.train_ds is not None:
             return DataLoader(
-                self.train_ds, # DataLoaders accept datasets.Dataset objects
+                self.train_ds,  # DataLoaders accept datasets.Dataset objects
                 batch_size=self.batch_size,
                 drop_last=True,
                 shuffle=True,

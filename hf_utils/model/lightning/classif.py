@@ -59,7 +59,7 @@ class LightningImgClassif(LightningBaseModel):
             abs_data_dir = str(Path(data_dir).resolve())
 
             self.save_hyperparameters(
-                {'data_dir': abs_data_dir}, # store absolute custom cache path for later re-import
+                {'data_dir': abs_data_dir},  # store absolute custom cache path for later re-import
                 logger=True
             )
         else:
@@ -94,8 +94,8 @@ class LightningImgClassif(LightningBaseModel):
 
         _ = self.train_acc(logits, batch['labels'])
 
-        self.log('train_loss', loss.item()) # Lightning logs batch-wise scalars during training per default
-        self.log('train_acc', self.train_acc) # the same applies to torchmetrics.Metric objects
+        self.log('train_loss', loss.item())  # Lightning logs batch-wise scalars during training per default
+        self.log('train_acc', self.train_acc)  # the same applies to torchmetrics.Metric objects
 
         return loss
 
@@ -109,8 +109,8 @@ class LightningImgClassif(LightningBaseModel):
 
         _ = self.val_acc(logits, batch['labels'])
 
-        self.log('val_loss', loss.item()) # Lightning automatically averages scalars over batches for validation
-        self.log('val_acc', self.val_acc) # the batch size is considered when logging torchmetrics.Metric objects
+        self.log('val_loss', loss.item())  # Lightning automatically averages scalars over batches for validation
+        self.log('val_acc', self.val_acc)  # the batch size is considered when logging torchmetrics.Metric objects
 
         return loss
 
@@ -124,8 +124,8 @@ class LightningImgClassif(LightningBaseModel):
 
         _ = self.test_acc(logits, batch['labels'])
 
-        self.log('test_loss', loss.item()) # Lightning automatically averages scalars over batches for testing
-        self.log('test_acc', self.test_acc) # the batch size is considered when logging torchmetrics.Metric objects
+        self.log('test_loss', loss.item())  # Lightning automatically averages scalars over batches for testing
+        self.log('test_acc', self.test_acc)  # the batch size is considered when logging torchmetrics.Metric objects
 
         return loss
 
