@@ -11,6 +11,7 @@ transformers
 datasets
 accelerate
 evaluate
+peft
 matplotlib
 notebook
 

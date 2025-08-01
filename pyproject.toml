@@ -29,7 +29,8 @@ dependencies = [
     "transformers",
     "datasets",
     "accelerate",
-    "evaluate"
+    "evaluate",
+    "peft"
 ]
 
 [project.optional-dependencies]
