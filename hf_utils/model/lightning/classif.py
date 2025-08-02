@@ -22,7 +22,13 @@ class LightningImgClassif(LightningBaseModel):
     num_labels : int
         Number of target labels.
     lr : float
-        Initial optimizer learning rate.
+        Initial learning rate.
+    lr_schedule : {"constant", "cosine"}
+        Learning rate schedule type.
+    lr_interval : {"epoch", "step"}
+        Learning rate update interval.
+    lr_warmup : int
+        Warmup steps/epochs.
 
     '''
 
@@ -31,7 +37,10 @@ class LightningImgClassif(LightningBaseModel):
         model_name: str = 'google/vit-base-patch16-224',
         data_dir: str | None = None,
         num_labels: int = 10,
-        lr: float = 1e-04
+        lr: float = 1e-04,
+        lr_schedule: str | None = 'constant',
+        lr_interval: str = 'epoch',
+        lr_warmup: int = 0
     ) -> None:
 
         # load pretrained model
@@ -52,7 +61,13 @@ class LightningImgClassif(LightningBaseModel):
             p.requires_grad = True
 
         # initialize parent class
-        super().__init__(model=model, lr=lr)
+        super().__init__(
+            model=model,
+            lr=lr,
+            lr_schedule=lr_schedule,
+            lr_interval=lr_interval,
+            lr_warmup=lr_warmup
+        )
 
         # store hyperparams
         if data_dir is not None:

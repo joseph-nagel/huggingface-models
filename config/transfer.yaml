@@ -21,6 +21,9 @@ model:
     data_dir: "run/data/"
     num_labels: 10
     lr: 1e-04
+    lr_schedule: "cosine"
+    lr_interval: "epoch"
+    lr_warmup: 2
 
 trainer:
   accelerator: "gpu"

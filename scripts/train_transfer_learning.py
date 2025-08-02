@@ -54,7 +54,10 @@ def parse_args():
     parser.add_argument('--model-name', type=str, default='microsoft/resnet-18', help='Pretrained model name')
     parser.add_argument('--num-labels', type=int, default=10, help='Number of target labels')
 
-    parser.add_argument('--lr', type=float, default=1e-04, help='Optimizer learning rate')
+    parser.add_argument('--lr', type=float, default=1e-04, help='Initial learning rate')
+    parser.add_argument('--lr-schedule', type=str, default='constant', choices=['constant', 'cosine'], help='LR schedule type')
+    parser.add_argument('--lr-interval', type=str, default='epoch', choices=['epoch', 'step'], help='LR update interval')
+    parser.add_argument('--lr-warmup', type=int, default=0, help='Warmup steps/epochs')
 
     parser.add_argument('--max-epochs', type=int, default=20, help='Max. number of training epochs')
 
@@ -103,7 +106,10 @@ def main(args):
         model_name=args.model_name,
         data_dir=args.data_dir,
         num_labels=args.num_labels,
-        lr=args.lr
+        lr=args.lr,
+        lr_schedule=args.lr_schedule,
+        lr_interval=args.lr_interval,
+        lr_warmup=args.lr_warmup
     )
 
     # set accelerator
