@@ -20,10 +20,6 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 ### Computer vision models
 
-- [diffusers](notebooks/diffusers.ipynb)
-
-- [timm](notebooks/timm.ipynb)
-
 - [transformers: Image classification](notebooks/transformers_cv_classif.ipynb)
 
 - [transformers: Object detection](notebooks/transformers_cv_detect.ipynb)
@@ -53,6 +49,15 @@ This example uses PyTorch and Lightning on top of the transformers library.
 - [transformers: CLIPSeg for semantic segmentation](notebooks/transformers_vlm_clipseg.ipynb)
 
 - [transformers: OWL-ViT for object detection](notebooks/transformers_vlm_owlvit.ipynb)
+
+
+### Other things
+
+- [diffusers](notebooks/diffusers.ipynb)
+
+- [timm](notebooks/timm.ipynb)
+
+- [Learning rate schedules](notebooks/lr_schedules.ipynb)
 
 
 ## Installation
