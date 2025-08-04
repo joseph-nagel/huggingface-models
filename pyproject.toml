@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 packages = ["hf_utils"]
 
 [project]
-name = "hf-models"
+name = "hf-utils"
 version = "0.0.1"
 description = "Hugging Face models"
 readme = "README.md"
