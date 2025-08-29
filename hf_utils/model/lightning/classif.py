@@ -23,9 +23,9 @@ class LightningImgClassif(LightningBaseModel):
         Number of target labels.
     lr : float
         Initial learning rate.
-    lr_schedule : {"constant", "cosine"}
+    lr_schedule : {'constant', 'cosine'}
         Learning rate schedule type.
-    lr_interval : {"epoch", "step"}
+    lr_interval : {'epoch', 'step'}
         Learning rate update interval.
     lr_warmup : int
         Warmup steps/epochs.

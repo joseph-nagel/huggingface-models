@@ -19,9 +19,9 @@ class LightningBaseModel(LightningModule):
         Hugging Face transformers model.
     lr : float
         Initial learning rate.
-    lr_schedule : {"constant", "cosine"}
+    lr_schedule : {'constant', 'cosine'}
         Learning rate schedule type.
-    lr_interval : {"epoch", "step"}
+    lr_interval : {'epoch', 'step'}
         Learning rate update interval.
     lr_warmup : int
         Warmup steps/epochs.
@@ -118,12 +118,12 @@ class LightningBaseModel(LightningModule):
                 raise ValueError(f'Unknown LR interval: {self.lr_interval}')
 
             # create LR scheduler
-            if self.lr_schedule == "constant":
+            if self.lr_schedule == 'constant':
                 lr_scheduler = get_constant_schedule_with_warmup(
                     optimizer,
                     num_warmup_steps=self.lr_warmup
                 )
-            elif self.lr_schedule == "cosine":
+            elif self.lr_schedule == 'cosine':
                 lr_scheduler = get_cosine_schedule_with_warmup(
                     optimizer,
                     num_warmup_steps=self.lr_warmup,
