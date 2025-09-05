@@ -150,4 +150,3 @@ class DistilGPT2Classif(BaseClassif):
                 loss = self.criterion(logits, labels)
 
             return loss, logits  # this is compatible with transformers.Trainer
-

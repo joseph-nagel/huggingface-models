@@ -12,4 +12,3 @@ from .torch import (
     DistilBertClassif,
     DistilGPT2Classif
 )
-

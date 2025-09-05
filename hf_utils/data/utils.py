@@ -79,4 +79,3 @@ def load_imdb(
             'val': val_ds.shuffle(seed=23).select(range(20)),
             'test': test_ds.shuffle(seed=23).select(range(20))
         })
-

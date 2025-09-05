@@ -11,4 +11,3 @@ from .base import BaseClassif
 from .bert_like import DistilBertClassif
 
 from .gpt_like import DistilGPT2Classif
-

@@ -140,4 +140,3 @@ class LightningBaseModel(LightningModule):
             }
 
             return [optimizer], [lr_config]
-

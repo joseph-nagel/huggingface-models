@@ -157,4 +157,3 @@ class CIFAR10DataModule(BaseDataModule):
 
             # set image transformation
             self.test_ds.set_transform(DataTransform(self.test_transform))
-

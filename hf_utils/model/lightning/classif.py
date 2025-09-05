@@ -143,4 +143,3 @@ class LightningImgClassif(LightningBaseModel):
         self.log('test_acc', self.test_acc)  # the batch size is considered when logging torchmetrics.Metric objects
 
         return loss
-

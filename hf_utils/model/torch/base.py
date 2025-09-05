@@ -105,4 +105,3 @@ class BaseClassif(nn.Module, ABC):
         **kwargs: Any
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         raise NotImplementedError
-

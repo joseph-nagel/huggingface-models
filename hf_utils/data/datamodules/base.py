@@ -126,4 +126,3 @@ class BaseDataModule(LightningDataModule):
             )
         else:
             raise AttributeError('Test set has not been set')
-

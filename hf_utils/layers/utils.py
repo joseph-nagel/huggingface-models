@@ -126,4 +126,3 @@ def make_dense(
     dense_block = make_block(layers)
 
     return dense_block
-

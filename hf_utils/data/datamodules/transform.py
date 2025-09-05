@@ -88,4 +88,3 @@ class DataTransform:
         batch_dict[self.lbl_target_key] = batch_dict.pop(self.lbl_source_key)
 
         return batch_dict
-

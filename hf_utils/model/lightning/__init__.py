@@ -5,4 +5,3 @@ from . import base, classif
 from .base import LightningBaseModel
 
 from .classif import LightningImgClassif
-

@@ -31,4 +31,3 @@ from .model import (
     DistilBertClassif,
     DistilGPT2Classif
 )
-
