@@ -23,12 +23,14 @@ class LightningImgClassif(LightningBaseModel):
         Number of target labels.
     lr : float
         Initial learning rate.
-    lr_schedule : {'constant', 'cosine'}
+    lr_schedule : str or None
         Learning rate schedule type.
-    lr_interval : {'epoch', 'step'}
+    lr_interval : {'epoch', 'step'} or None
         Learning rate update interval.
-    lr_warmup : int
-        Warmup steps/epochs.
+    lr_warmup : int or None
+        Number of warmup steps/epochs.
+    lr_cycles : int or None
+        Number of hard restarts.
 
     '''
 
@@ -39,8 +41,9 @@ class LightningImgClassif(LightningBaseModel):
         num_labels: int = 10,
         lr: float = 1e-04,
         lr_schedule: str | None = 'constant',
-        lr_interval: str = 'epoch',
-        lr_warmup: int = 0
+        lr_interval: str | None = 'epoch',
+        lr_warmup: int | None = 0,
+        lr_cycles: int | None = 1
     ) -> None:
 
         # load pretrained model
@@ -66,7 +69,8 @@ class LightningImgClassif(LightningBaseModel):
             lr=lr,
             lr_schedule=lr_schedule,
             lr_interval=lr_interval,
-            lr_warmup=lr_warmup
+            lr_warmup=lr_warmup,
+            lr_cycles=lr_cycles
         )
 
         # store hyperparams

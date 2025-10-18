@@ -3,10 +3,8 @@
 import torch
 import torch.nn as nn
 from lightning.pytorch import LightningModule
-from transformers import (
-    get_cosine_schedule_with_warmup,
-    get_constant_schedule_with_warmup
-)
+
+from .lr_schedule import make_lr_schedule
 
 
 class LightningBaseModel(LightningModule):
@@ -19,12 +17,14 @@ class LightningBaseModel(LightningModule):
         Hugging Face transformers model.
     lr : float
         Initial learning rate.
-    lr_schedule : {'constant', 'cosine'}
+    lr_schedule : str or None
         Learning rate schedule type.
-    lr_interval : {'epoch', 'step'}
+    lr_interval : {'epoch', 'step'} or None
         Learning rate update interval.
-    lr_warmup : int
-        Warmup steps/epochs.
+    lr_warmup : int or None
+        Number of warmup steps/epochs.
+    lr_cycles : int or None
+        Number of hard restarts.
 
     '''
 
@@ -33,8 +33,9 @@ class LightningBaseModel(LightningModule):
         model: nn.Module,
         lr: float = 1e-04,
         lr_schedule: str | None = 'constant',
-        lr_interval: str = 'epoch',
-        lr_warmup: int = 0
+        lr_interval: str | None = 'epoch',
+        lr_warmup: int | None = 0,
+        lr_cycles: int | None = 1
     ) -> None:
 
         super().__init__()
@@ -46,7 +47,8 @@ class LightningBaseModel(LightningModule):
         self.lr = abs(lr)
         self.lr_schedule = lr_schedule
         self.lr_interval = lr_interval
-        self.lr_warmup = abs(int(lr_warmup))
+        self.lr_warmup = abs(int(lr_warmup)) if lr_warmup is not None else None
+        self.lr_cycles = abs(int(lr_cycles)) if lr_cycles is not None else None
 
         # store hyperparams
         self.save_hyperparameters(
@@ -111,26 +113,20 @@ class LightningBaseModel(LightningModule):
 
             # get number of training time units
             if self.lr_interval == 'epoch':
-                num_training_steps = self.trainer.max_epochs
+                num_total = self.trainer.max_epochs
             elif self.lr_interval == 'step':
-                num_training_steps = self.trainer.estimated_stepping_batches
+                num_total = self.trainer.estimated_stepping_batches
             else:
                 raise ValueError(f'Unknown LR interval: {self.lr_interval}')
 
             # create LR scheduler
-            if self.lr_schedule == 'constant':
-                lr_scheduler = get_constant_schedule_with_warmup(
-                    optimizer,
-                    num_warmup_steps=self.lr_warmup
-                )
-            elif self.lr_schedule == 'cosine':
-                lr_scheduler = get_cosine_schedule_with_warmup(
-                    optimizer,
-                    num_warmup_steps=self.lr_warmup,
-                    num_training_steps=num_training_steps
-                )
-            else:
-                raise ValueError(f'Unknown LR schedule type: {self.lr_schedule}')
+            lr_scheduler = make_lr_schedule(
+                optimizer=optimizer,
+                mode=self.lr_schedule,
+                num_total=num_total,
+                num_warmup=self.lr_warmup,
+                num_cycles=self.lr_cycles
+            )
 
             # create LR config
             lr_config = {

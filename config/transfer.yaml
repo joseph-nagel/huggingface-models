@@ -24,6 +24,7 @@ model:
     lr_schedule: "cosine"
     lr_interval: "epoch"
     lr_warmup: 0
+    lr_cycles: null
 
 trainer:
   accelerator: "gpu"
