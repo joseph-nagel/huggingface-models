@@ -51,13 +51,23 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 ## Installation
 
-```
+```bash
 pip install -e .
 ```
 
 
 ## Training
 
-```
+```bash
 python scripts/main.py fit --config config/finetune.yaml
+```
+
+```bash
+python scripts/main.py fit --config config/finetune.yaml \
+  --model.init_args.model_name="microsoft/resnet-18"
+```
+
+```bash
+python scripts/main.py fit --config config/finetune.yaml \
+  --model.init_args.model_name="facebook/dinov2-small-imagenet1k-1-layer"
 ```

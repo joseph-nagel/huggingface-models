@@ -46,6 +46,7 @@ class LightningBaseModel(LightningModule):
         if not isinstance(model, PreTrainedModel):
             raise TypeError(f'Invalid model type: {type(model)}')
 
+        model = model.train()
         self.model = model
 
         # set LR params

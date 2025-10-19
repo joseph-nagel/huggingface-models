@@ -58,7 +58,7 @@ class LightningImageClassifier(LightningBaseModel):
             # ignore_mismatched_sizes=False if num_labels is None else True
         )
 
-        model = model.eval()
+        model = model.train()
 
         # freeze/unfreeze parameters
         for p in model.parameters():

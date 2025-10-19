@@ -18,7 +18,6 @@ model:
   class_path: "hf_utils.LightningImageClassifier"
   init_args:
     model_name: "microsoft/resnet-18"
-    # model_name: "facebook/dinov2-small-imagenet1k-1-layer"
     data_dir: "run/data/"
     num_labels: 10
     lr: 1e-04
