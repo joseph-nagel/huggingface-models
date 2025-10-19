@@ -4,7 +4,7 @@ from . import lightning, torch
 
 from .lightning import (
     LightningBaseModel,
-    LightningImgClassif
+    LightningImageClassifier
 )
 
 from .torch import (

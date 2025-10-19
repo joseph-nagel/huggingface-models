@@ -4,6 +4,6 @@ from . import base, classif, lr_schedule
 
 from .base import LightningBaseModel
 
-from .classif import LightningImgClassif
+from .classif import LightningImageClassifier
 
 from .lr_schedule import make_lr_schedule
