@@ -22,9 +22,9 @@ This example uses PyTorch and Lightning on top of the transformers library.
 
 - [transformers: Image classification](notebooks/transformers_cv_classif.ipynb)
 - [transformers: Object detection](notebooks/transformers_cv_detect.ipynb)
+- [transformers: Finetuning](notebooks/transformers_cv_finetune.ipynb)
 - [transformers: PEFT with LoRA](notebooks/transformers_cv_lora.ipynb)
 - [transformers: Semantic segmentation](notebooks/transformers_cv_segment.ipynb)
-- [transformers: Transfer learning](notebooks/transformers_cv_transfer.ipynb)
 
 
 ### Language models
@@ -59,5 +59,5 @@ pip install -e .
 ## Training
 
 ```
-python scripts/main.py fit --config config/transfer.yaml
+python scripts/main.py fit --config config/finetune.yaml
 ```
