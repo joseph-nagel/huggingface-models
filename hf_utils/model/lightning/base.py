@@ -1,8 +1,10 @@
 '''Base wrapper.'''
 
+from typing import Any
+
 import torch
-import torch.nn as nn
 from lightning.pytorch import LightningModule
+from transformers import PreTrainedModel
 
 from .lr_schedule import make_lr_schedule
 
@@ -30,7 +32,7 @@ class LightningBaseModel(LightningModule):
 
     def __init__(
         self,
-        model: nn.Module,
+        model: PreTrainedModel,
         lr: float = 1e-04,
         lr_schedule: str | None = 'constant',
         lr_interval: str | None = 'epoch',
@@ -41,6 +43,9 @@ class LightningBaseModel(LightningModule):
         super().__init__()
 
         # set Hugging Face model
+        if not isinstance(model, PreTrainedModel):
+            raise TypeError(f'Invalid model type: {type(model)}')
+
         self.model = model
 
         # set LR params
@@ -56,15 +61,15 @@ class LightningBaseModel(LightningModule):
             logger=True
         )
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, *args: torch.Tensor, **kwargs: Any) -> torch.Tensor:
         '''Run the model.'''
-        outputs = self.model(x)
-        return outputs['logits']
+        outputs = self.model(*args, **kwargs)
+        return outputs.logits
 
-    def loss(self, batch: dict[str, torch.Tensor]) -> torch.Tensor:
+    def loss(self, *args: torch.Tensor, **kwargs: Any) -> torch.Tensor:
         '''Compute the loss.'''
-        outputs = self.model(**batch)
-        return outputs['loss']
+        outputs = self.model(*args, **kwargs)
+        return outputs.loss
 
     def training_step(
         self,
@@ -72,7 +77,7 @@ class LightningBaseModel(LightningModule):
         batch_idx: int
     ) -> torch.Tensor:
 
-        loss = self.loss(batch)
+        loss = self.loss(**batch)
         self.log('train_loss', loss.item())  # Lightning logs batch-wise scalars during training per default
 
         return loss
@@ -83,7 +88,7 @@ class LightningBaseModel(LightningModule):
         batch_idx: int
     ) -> torch.Tensor:
 
-        loss = self.loss(batch)
+        loss = self.loss(**batch)
         self.log('val_loss', loss.item())  # Lightning automatically averages scalars over batches for validation
 
         return loss
@@ -94,7 +99,7 @@ class LightningBaseModel(LightningModule):
         batch_idx: int
     ) -> torch.Tensor:
 
-        loss = self.loss(batch)
+        loss = self.loss(**batch)
         self.log('test_loss', loss.item())  # Lightning automatically averages scalars over batches for testing
 
         return loss
