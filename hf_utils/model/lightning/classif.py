@@ -118,7 +118,7 @@ class LightningImageClassifier(LightningBaseModel):
 
         loss, logits = self.loss(return_logits=True, **batch)
 
-        _ = self.train_acc(logits, batch.labels)
+        _ = self.train_acc(logits, batch['labels'])
 
         self.log('train_loss', loss.item())  # Lightning logs batch-wise scalars during training per default
         self.log('train_acc', self.train_acc)  # the same applies to torchmetrics.Metric objects
@@ -133,7 +133,7 @@ class LightningImageClassifier(LightningBaseModel):
 
         loss, logits = self.loss(return_logits=True, **batch)
 
-        _ = self.val_acc(logits, batch.labels)
+        _ = self.val_acc(logits, batch['labels'])
 
         self.log('val_loss', loss.item())  # Lightning automatically averages scalars over batches for validation
         self.log('val_acc', self.val_acc)  # the batch size is considered when logging torchmetrics.Metric objects
@@ -148,7 +148,7 @@ class LightningImageClassifier(LightningBaseModel):
 
         loss, logits = self.loss(return_logits=True, **batch)
 
-        _ = self.test_acc(logits, batch.labels)
+        _ = self.test_acc(logits, batch['labels'])
 
         self.log('test_loss', loss.item())  # Lightning automatically averages scalars over batches for testing
         self.log('test_acc', self.test_acc)  # the batch size is considered when logging torchmetrics.Metric objects

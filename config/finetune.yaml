@@ -18,6 +18,7 @@ model:
   class_path: "hf_utils.LightningImageClassifier"
   init_args:
     model_name: "microsoft/resnet-18"
+    # model_name: "facebook/dinov2-small-imagenet1k-1-layer"
     data_dir: "run/data/"
     num_labels: 10
     lr: 1e-04
@@ -35,11 +36,11 @@ trainer:
     class_path: "lightning.pytorch.loggers.TensorBoardLogger"
     init_args:
       save_dir: "run/"
-      name: "transfer"
+      name: "finetune"
       version: null
     # class_path: "lightning.pytorch.loggers.MLFlowLogger"
     # init_args:
-    #   experiment_name: "transfer"
+    #   experiment_name: "finetune"
     #   run_name: null
     #   save_dir: "run/mlruns/"
     #   log_model: true
