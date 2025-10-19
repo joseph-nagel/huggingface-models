@@ -3,7 +3,7 @@ Training script.
 
 Example
 -------
-python scripts/main.py fit --config config/transfer.yaml
+python scripts/main.py fit --config config/finetune.yaml
 
 '''
 

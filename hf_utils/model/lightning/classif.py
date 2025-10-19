@@ -1,5 +1,6 @@
 '''Image classifier.'''
 
+from typing import Any
 from pathlib import Path
 
 import torch
@@ -9,7 +10,7 @@ from transformers import AutoModelForImageClassification
 from .base import LightningBaseModel
 
 
-class LightningImgClassif(LightningBaseModel):
+class LightningImageClassifier(LightningBaseModel):
     '''
     Lightning wrapper for a Hugging Face image classifier.
 
@@ -19,16 +20,18 @@ class LightningImgClassif(LightningBaseModel):
         Name of the model checkpoint.
     data_dir : str or None
         Directory for storing the checkpoint.
-    num_labels : int
+    num_labels : int or None
         Number of target labels.
     lr : float
         Initial learning rate.
-    lr_schedule : {'constant', 'cosine'}
+    lr_schedule : str or None
         Learning rate schedule type.
-    lr_interval : {'epoch', 'step'}
+    lr_interval : {'epoch', 'step'} or None
         Learning rate update interval.
-    lr_warmup : int
-        Warmup steps/epochs.
+    lr_warmup : int or None
+        Number of warmup steps/epochs.
+    lr_cycles : int or None
+        Number of hard restarts.
 
     '''
 
@@ -36,19 +39,23 @@ class LightningImgClassif(LightningBaseModel):
         self,
         model_name: str = 'google/vit-base-patch16-224',
         data_dir: str | None = None,
-        num_labels: int = 10,
+        num_labels: int | None = None,
         lr: float = 1e-04,
         lr_schedule: str | None = 'constant',
-        lr_interval: str = 'epoch',
-        lr_warmup: int = 0
+        lr_interval: str | None = 'epoch',
+        lr_warmup: int | None = 0,
+        lr_cycles: int | None = 1
     ) -> None:
 
         # load pretrained model
+        further_opts = {} if num_labels is None else {'num_labels': num_labels, 'ignore_mismatched_sizes': True}
+
         model = AutoModelForImageClassification.from_pretrained(
             model_name,
             cache_dir=data_dir,
-            num_labels=num_labels,
-            ignore_mismatched_sizes=False if num_labels is None else True
+            **further_opts
+            # num_labels=num_labels,  # this argument should not be None
+            # ignore_mismatched_sizes=False if num_labels is None else True
         )
 
         model = model.eval()
@@ -66,7 +73,8 @@ class LightningImgClassif(LightningBaseModel):
             lr=lr,
             lr_schedule=lr_schedule,
             lr_interval=lr_interval,
-            lr_warmup=lr_warmup
+            lr_warmup=lr_warmup,
+            lr_cycles=lr_cycles
         )
 
         # store hyperparams
@@ -81,23 +89,26 @@ class LightningImgClassif(LightningBaseModel):
             self.save_hyperparameters(logger=True)
 
         # create accuracy metrics
+        num_labels = num_labels if num_labels is not None else model.config.num_labels
+
         self.train_acc = Accuracy(task='multiclass', num_classes=num_labels)
         self.val_acc = Accuracy(task='multiclass', num_classes=num_labels)
         self.test_acc = Accuracy(task='multiclass', num_classes=num_labels)
 
     def loss(
         self,
-        batch: dict[str, torch.Tensor],
-        return_logits: bool = False
+        return_logits: bool = False,
+        *args: torch.Tensor,
+        **kwargs: Any
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         '''Compute loss (and optionally return logits).'''
 
-        outputs = self.model(**batch)
+        outputs = self.model(*args, **kwargs)
 
-        if not return_logits:
-            return outputs['loss']
+        if return_logits:
+            return outputs.loss, outputs.logits
         else:
-            return outputs['loss'], outputs['logits']
+            return outputs.loss
 
     def training_step(
         self,
@@ -105,7 +116,7 @@ class LightningImgClassif(LightningBaseModel):
         batch_idx: int
     ) -> torch.Tensor:
 
-        loss, logits = self.loss(batch, return_logits=True)
+        loss, logits = self.loss(return_logits=True, **batch)
 
         _ = self.train_acc(logits, batch['labels'])
 
@@ -120,7 +131,7 @@ class LightningImgClassif(LightningBaseModel):
         batch_idx: int
     ) -> torch.Tensor:
 
-        loss, logits = self.loss(batch, return_logits=True)
+        loss, logits = self.loss(return_logits=True, **batch)
 
         _ = self.val_acc(logits, batch['labels'])
 
@@ -135,7 +146,7 @@ class LightningImgClassif(LightningBaseModel):
         batch_idx: int
     ) -> torch.Tensor:
 
-        loss, logits = self.loss(batch, return_logits=True)
+        loss, logits = self.loss(return_logits=True, **batch)
 
         _ = self.test_acc(logits, batch['labels'])
 

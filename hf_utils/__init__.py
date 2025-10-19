@@ -26,7 +26,7 @@ from .layers import (
 
 from .model import (
     LightningBaseModel,
-    LightningImgClassif,
+    LightningImageClassifier,
     BaseClassif,
     DistilBertClassif,
     DistilGPT2Classif
