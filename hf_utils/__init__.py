@@ -25,6 +25,7 @@ from .layers import (
 )
 
 from .model import (
+    make_lora,
     LightningBaseModel,
     LightningImageClassifier,
     BaseClassif,

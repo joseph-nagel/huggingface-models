@@ -37,7 +37,7 @@ class LightningImageClassifier(LightningBaseModel):
 
     def __init__(
         self,
-        model_name: str = 'google/vit-base-patch16-224',
+        model_name: str = 'facebook/dinov2-small-imagenet1k-1-layer',
         data_dir: str | None = None,
         num_labels: int | None = None,
         lr: float = 1e-04,
