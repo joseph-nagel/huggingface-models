@@ -16,7 +16,7 @@ def make_lora(
     bias: Literal['none', 'all', 'lora_only'] = 'none',
     target_modules: str | Sequence[str] | None = None,
     modules_to_save: Sequence[str] | None = None
-):
+) -> LoraModel:
     '''Integrate LoRA layers into model.'''
 
     rank = abs(int(rank))

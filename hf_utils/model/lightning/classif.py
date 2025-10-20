@@ -1,4 +1,4 @@
-'''Image classifier.'''
+'''Lightning image classifier.'''
 
 from typing import Any
 from pathlib import Path
@@ -7,19 +7,19 @@ import torch
 from torchmetrics.classification import Accuracy
 from transformers import AutoModelForImageClassification
 
-from .base import LightningBaseModel
+from .base import LightningForHFModel
 
 
-class LightningImageClassifier(LightningBaseModel):
+class LightningForHFImgClf(LightningForHFModel):
     '''
-    Lightning wrapper for a Hugging Face image classifier.
+    Lightning wrapper for Hugging Face image classifiers.
 
     Parameters
     ----------
     model_name : str
         Name of the model checkpoint.
     data_dir : str or None
-        Directory for storing the checkpoint.
+        Directory for storing the HF checkpoint.
     num_labels : int or None
         Number of target labels.
     lr : float

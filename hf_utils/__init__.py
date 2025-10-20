@@ -26,8 +26,8 @@ from .layers import (
 
 from .model import (
     make_lora,
-    LightningBaseModel,
-    LightningImageClassifier,
+    LightningForHFModel,
+    LightningForHFImgClf,
     BaseClassif,
     DistilBertClassif,
     DistilGPT2Classif

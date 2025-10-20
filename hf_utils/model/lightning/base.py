@@ -1,4 +1,4 @@
-'''Base wrapper.'''
+'''Lightning base wrapper.'''
 
 from typing import Any
 
@@ -9,7 +9,7 @@ from transformers import PreTrainedModel
 from .lr_schedule import make_lr_schedule
 
 
-class LightningBaseModel(LightningModule):
+class LightningForHFModel(LightningModule):
     '''
     Lightning wrapper for Hugging Face models.
 
