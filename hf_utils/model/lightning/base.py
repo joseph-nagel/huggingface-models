@@ -9,7 +9,7 @@ from transformers import PreTrainedModel
 from .lr_schedule import make_lr_schedule
 
 
-class LightningForHFModel(LightningModule):
+class LightningHFModel(LightningModule):
     '''
     Lightning wrapper for Hugging Face models.
 
@@ -36,8 +36,8 @@ class LightningForHFModel(LightningModule):
         lr: float = 1e-04,
         lr_schedule: str | None = 'constant',
         lr_interval: str | None = 'epoch',
-        lr_warmup: int | None = 0,
-        lr_cycles: int | None = 1
+        lr_warmup: int | None = None,
+        lr_cycles: int | None = None
     ) -> None:
 
         super().__init__()

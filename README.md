@@ -68,6 +68,6 @@ python scripts/main.py fit --config config/finetune.yaml \
 ```
 
 ```bash
-python scripts/main.py fit --config config/finetune.yaml \
+python scripts/main.py fit --config config/lora.yaml \
   --model.init_args.model_name="facebook/dinov2-small-imagenet1k-1-layer"
 ```

@@ -7,10 +7,10 @@ import torch
 from torchmetrics.classification import Accuracy
 from transformers import AutoModelForImageClassification
 
-from .base import LightningForHFModel
+from .base import LightningHFModel
 
 
-class LightningForHFImgClf(LightningForHFModel):
+class LightningHFImageClassif(LightningHFModel):
     '''
     Lightning wrapper for Hugging Face image classifiers.
 
@@ -32,6 +32,8 @@ class LightningForHFImgClf(LightningForHFModel):
         Number of warmup steps/epochs.
     lr_cycles : int or None
         Number of hard restarts.
+    freeze_backbone: bool
+        Determines whether backbone is frozen.
 
     '''
 
@@ -43,8 +45,9 @@ class LightningForHFImgClf(LightningForHFModel):
         lr: float = 1e-04,
         lr_schedule: str | None = 'constant',
         lr_interval: str | None = 'epoch',
-        lr_warmup: int | None = 0,
-        lr_cycles: int | None = 1
+        lr_warmup: int | None = None,
+        lr_cycles: int | None = None,
+        freeze_backbone : bool = True
     ) -> None:
 
         # load pretrained model
@@ -61,8 +64,9 @@ class LightningForHFImgClf(LightningForHFModel):
         model = model.train()
 
         # freeze/unfreeze parameters
-        for p in model.parameters():
-            p.requires_grad = False
+        if freeze_backbone:
+            for p in model.parameters():
+                p.requires_grad = False
 
         for p in model.classifier.parameters():
             p.requires_grad = True

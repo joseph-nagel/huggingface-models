@@ -21,7 +21,7 @@ from lightning.pytorch.callbacks import (
     StochasticWeightAveraging
 )
 
-from hf_utils import CIFAR10DataModule, LightningForHFImgClf
+from hf_utils import CIFAR10DataModule, LightningHFImageClassif
 
 
 def parse_args():
@@ -58,6 +58,11 @@ def parse_args():
     parser.add_argument('--lr-schedule', type=str, default='constant', choices=['constant', 'cosine'], help='LR schedule type')
     parser.add_argument('--lr-interval', type=str, default='epoch', choices=['epoch', 'step'], help='LR update interval')
     parser.add_argument('--lr-warmup', type=int, default=0, help='Warmup steps/epochs')
+    parser.add_argument('--lr-cycles', type=int, default=1, help='Number of hard restarts')
+
+    parser.add_argument('--freeze-backbone', dest='freeze_backbone', action='store_true', help='Freeze backbone')
+    parser.add_argument('--unfreeze-backbone', dest='freeze_backbone', action='store_false', help='Unfreeze backbone')
+    parser.set_defaults(freeze_backbone=True)
 
     parser.add_argument('--max-epochs', type=int, default=20, help='Max. number of training epochs')
 
@@ -102,14 +107,16 @@ def main(args):
     )
 
     # initialize model
-    model = LightningForHFImgClf(
+    model = LightningHFImageClassif(
         model_name=args.model_name,
         data_dir=args.data_dir,
         num_labels=args.num_labels,
         lr=args.lr,
         lr_schedule=args.lr_schedule,
         lr_interval=args.lr_interval,
-        lr_warmup=args.lr_warmup
+        lr_warmup=args.lr_warmup,
+        lr_cycles=args.lr_cycles,
+        freeze_backbone=args.freeze_backbone
     )
 
     # set accelerator

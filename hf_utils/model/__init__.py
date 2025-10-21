@@ -3,8 +3,9 @@
 from . import lightning, peft, torch
 
 from .lightning import (
-    LightningForHFModel,
-    LightningForHFImgClf
+    LightningHFModel,
+    LightningHFImageClassif,
+    LightningHFImageClassifLoRA
 )
 
 from .peft import make_lora

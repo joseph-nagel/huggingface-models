@@ -1,9 +1,16 @@
 '''Lightning for Hugging Face models.'''
 
-from . import base, classif, lr_schedule
+from . import (
+    base,
+    classif,
+    lora,
+    lr_schedule
+)
 
-from .base import LightningForHFModel
+from .base import LightningHFModel
 
-from .classif import LightningForHFImgClf
+from .classif import LightningHFImageClassif
+
+from .lora import LightningHFImageClassifLoRA
 
 from .lr_schedule import make_lr_schedule
