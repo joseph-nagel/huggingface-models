@@ -1,9 +1,7 @@
 '''Model layers.'''
 
 from . import dense, utils
-
 from .dense import DenseBlock
-
 from .utils import (
     ActivType,
     ACTIVATIONS,
