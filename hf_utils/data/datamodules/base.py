@@ -38,8 +38,7 @@ class BaseDataModule(LightningDataModule):
         test_transform: Callable[[Image.Image], torch.tensor] | None = None,
         batch_size: int = 32,
         num_workers: int  = 0
-    ) -> None:
-
+    ):
         super().__init__()
 
         # set loader parameters
@@ -84,7 +83,6 @@ class BaseDataModule(LightningDataModule):
 
     def train_dataloader(self) -> DataLoader:
         '''Create train dataloader.'''
-
         if hasattr(self, 'train_ds') and self.train_ds is not None:
             return DataLoader(
                 self.train_ds,  # DataLoaders accept datasets.Dataset objects
@@ -99,7 +97,6 @@ class BaseDataModule(LightningDataModule):
 
     def val_dataloader(self) -> DataLoader:
         '''Create val. dataloader.'''
-
         if hasattr(self, 'val_ds') and self.val_ds is not None:
             return DataLoader(
                 self.val_ds,
@@ -114,7 +111,6 @@ class BaseDataModule(LightningDataModule):
 
     def test_dataloader(self) -> DataLoader:
         '''Create test dataloader.'''
-
         if hasattr(self, 'test_ds') and self.test_ds is not None:
             return DataLoader(
                 self.test_ds,

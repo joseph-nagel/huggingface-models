@@ -1,10 +1,6 @@
 '''Hugging Face utilities.'''
 
-from . import (
-    data,
-    layers,
-    model
-)
+from . import data, layers, model
 from .data import (
     load_yelp,
     load_imdb,

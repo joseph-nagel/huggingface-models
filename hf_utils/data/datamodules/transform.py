@@ -39,7 +39,7 @@ class DataTransform:
         img_target_key: str | None = 'pixel_values',
         lbl_source_key: str = 'label',
         lbl_target_key: str | None = 'labels'
-    ) -> None:
+    ):
 
         # set image transform
         self.img_transform = img_transform

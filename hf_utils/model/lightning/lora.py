@@ -60,7 +60,7 @@ class LightningHFImageClassifLoRA(LightningHFImageClassif):
         lora_dropout: float | None = None,
         lora_bias: Literal['none', 'all', 'lora_only'] = 'none',
         lora_target_modules: str | Sequence[str] | None = None
-    ) -> None:
+    ):
 
         # initialize parent class
         super().__init__(

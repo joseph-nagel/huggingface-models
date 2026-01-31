@@ -41,7 +41,7 @@ class DistilBertClassif(BaseClassif):
         num_hidden: int | Sequence[int] | None = None,
         activation: ActivType | None = 'leaky_relu',
         drop_rate: float | None = None
-    ) -> None:
+    ):
 
         # call base class init
         super().__init__(

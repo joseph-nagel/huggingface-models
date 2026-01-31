@@ -44,7 +44,7 @@ class DistilGPT2Classif(BaseClassif):
         activation: ActivType | None = 'leaky_relu',
         drop_rate: float | None = None,
         pad_token_id: int | None = None
-    ) -> None:
+    ):
 
         # call base class init
         super().__init__(

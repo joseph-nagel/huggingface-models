@@ -28,8 +28,7 @@ class BaseClassif(nn.Module, ABC):
         num_labels: int,
         label_names: Sequence[str] | None = None,
         class_weights: Sequence[float] | torch.Tensor | None = None
-    ) -> None:
-
+    ):
         super().__init__()
 
         # set class weights
@@ -94,7 +93,7 @@ class BaseClassif(nn.Module, ABC):
     @abstractmethod
     def embed_dim(self) -> int:
         '''Get embedding dimensionality.'''
-        raise NotImplementedError
+        raise NotImplementedError()
 
     @abstractmethod
     def forward(
@@ -104,4 +103,4 @@ class BaseClassif(nn.Module, ABC):
         labels: torch.Tensor | None = None,
         **kwargs: Any
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
-        raise NotImplementedError
+        raise NotImplementedError()

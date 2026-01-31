@@ -8,7 +8,6 @@ from .base import BaseDataModule
 from .transform import DataTransform
 
 
-# define type aliases
 IntOrInts = int | tuple[int, int]
 FloatOrFloats = float | tuple[float, float, float]
 
@@ -49,7 +48,7 @@ class CIFAR10DataModule(BaseDataModule):
         tiny: bool = False,
         batch_size: int = 32,
         num_workers: int = 0
-    ) -> None:
+    ):
 
         # create transforms
         train_transform = transforms.Compose([

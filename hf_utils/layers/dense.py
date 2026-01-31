@@ -36,7 +36,7 @@ class DenseBlock(nn.Sequential):
         batchnorm: bool = False,
         normalize_last: bool = True,
         drop_rate: float | None = None
-    ) -> None:
+    ):
 
         # determine last activation
         if last_activation == 'same':

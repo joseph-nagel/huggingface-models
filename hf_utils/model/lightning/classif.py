@@ -48,7 +48,7 @@ class LightningHFImageClassif(LightningHFModel):
         lr_warmup: int | None = None,
         lr_cycles: int | None = None,
         freeze_backbone : bool = True
-    ) -> None:
+    ):
 
         # load pretrained model
         further_opts = {} if num_labels is None else {'num_labels': num_labels, 'ignore_mismatched_sizes': True}
@@ -106,7 +106,6 @@ class LightningHFImageClassif(LightningHFModel):
         **kwargs: Any
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
         '''Compute loss (and optionally return logits).'''
-
         outputs = self.model(*args, **kwargs)
 
         if return_logits:
@@ -119,14 +118,10 @@ class LightningHFImageClassif(LightningHFModel):
         batch: dict[str, torch.Tensor],
         batch_idx: int
     ) -> torch.Tensor:
-
         loss, logits = self.loss(return_logits=True, **batch)
-
         _ = self.train_acc(logits, batch['labels'])
-
         self.log('train_loss', loss.item())  # Lightning logs batch-wise scalars during training per default
         self.log('train_acc', self.train_acc)  # the same applies to torchmetrics.Metric objects
-
         return loss
 
     def validation_step(
@@ -134,14 +129,10 @@ class LightningHFImageClassif(LightningHFModel):
         batch: dict[str, torch.Tensor],
         batch_idx: int
     ) -> torch.Tensor:
-
         loss, logits = self.loss(return_logits=True, **batch)
-
         _ = self.val_acc(logits, batch['labels'])
-
         self.log('val_loss', loss.item())  # Lightning automatically averages scalars over batches for validation
         self.log('val_acc', self.val_acc)  # the batch size is considered when logging torchmetrics.Metric objects
-
         return loss
 
     def test_step(
@@ -149,12 +140,8 @@ class LightningHFImageClassif(LightningHFModel):
         batch: dict[str, torch.Tensor],
         batch_idx: int
     ) -> torch.Tensor:
-
         loss, logits = self.loss(return_logits=True, **batch)
-
         _ = self.test_acc(logits, batch['labels'])
-
         self.log('test_loss', loss.item())  # Lightning automatically averages scalars over batches for testing
         self.log('test_acc', self.test_acc)  # the batch size is considered when logging torchmetrics.Metric objects
-
         return loss
