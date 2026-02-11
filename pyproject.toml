@@ -30,11 +30,7 @@ dependencies = [
     "datasets",
     "accelerate",
     "evaluate",
-    "peft"
-]
-
-[project.optional-dependencies]
-interactive = [
+    "peft",
     "matplotlib",
     "notebook"
 ]
