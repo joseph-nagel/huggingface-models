@@ -10,7 +10,7 @@ name = "hf-utils"
 version = "0.0.1"
 description = "Hugging Face models"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = {file = "LICENSE"}
 authors = [
     {name = "Joseph Nagel", email = "JosephBNagel@gmail.com"}
@@ -35,5 +35,23 @@ dependencies = [
     "notebook"
 ]
 
+[project.optional-dependencies]
+dev = ["ruff"]
+
 [project.urls]
 source = "https://github.com/joseph-nagel/huggingface-models"
+
+[tool.ruff]
+line-length = 120
+indent-width = 4
+
+[tool.ruff.lint]
+extend-select = ["E501"]  # include line-length violations that would be ignored otherwise (handled by formatter)
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # ignore unused imports in __init__.py
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false  # do not collapse multi-line collections with a trailing comma into a single line

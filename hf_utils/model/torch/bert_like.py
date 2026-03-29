@@ -1,4 +1,4 @@
-'''Bidirectional BERT-like sequence classifiers.'''
+"""Bidirectional BERT-like sequence classifiers."""
 
 from collections.abc import Sequence
 from numbers import Number
@@ -11,7 +11,7 @@ from .base import BaseClassif
 
 
 class DistilBertClassif(BaseClassif):
-    '''
+    """
     BERT-like sequence classifier with custom head.
 
     Parameters
@@ -29,9 +29,9 @@ class DistilBertClassif(BaseClassif):
     drop_rate : float or None
         Dropout probability.
 
-    '''
+    """
 
-    model_name = 'distilbert/distilbert-base-uncased'
+    model_name = "distilbert/distilbert-base-uncased"
 
     def __init__(
         self,
@@ -39,21 +39,15 @@ class DistilBertClassif(BaseClassif):
         label_names: Sequence[str] | None = None,
         class_weights: Sequence[float] | torch.Tensor | None = None,
         num_hidden: int | Sequence[int] | None = None,
-        activation: ActivType | None = 'leaky_relu',
-        drop_rate: float | None = None
+        activation: ActivType | None = "leaky_relu",
+        drop_rate: float | None = None,
     ):
 
         # call base class init
-        super().__init__(
-            num_labels=num_labels,
-            label_names=label_names,
-            class_weights=class_weights
-        )
+        super().__init__(num_labels=num_labels, label_names=label_names, class_weights=class_weights)
 
         # create feature extractor
-        self.base_model = DistilBertModel.from_pretrained(
-            self.model_name
-        )
+        self.base_model = DistilBertModel.from_pretrained(self.model_name)
 
         # create classification head
         if num_hidden is None:
@@ -66,10 +60,10 @@ class DistilBertClassif(BaseClassif):
             num_features = [
                 self.embed_dim,  # number of inputs
                 *num_hidden,  # number of hidden units
-                num_labels if num_labels > 2 else 1  # number of outputs
+                num_labels if num_labels > 2 else 1,  # number of outputs
             ]
         else:
-            raise TypeError(f'Invalid type: {type(num_hidden)}')
+            raise TypeError(f"Invalid type: {type(num_hidden)}")
 
         self.classif_head = DenseBlock(
             num_features=num_features,
@@ -77,7 +71,7 @@ class DistilBertClassif(BaseClassif):
             last_activation=None,
             batchnorm=False,
             normalize_last=False,
-            drop_rate=drop_rate
+            drop_rate=drop_rate,
         )
 
         # freeze/unfreeze parameters
@@ -89,21 +83,18 @@ class DistilBertClassif(BaseClassif):
 
     @property
     def embed_dim(self) -> int:
-        '''Get embedding dimensionality.'''
+        """Get embedding dimensionality."""
         return self.base_model.config.dim
 
     def forward(
         self,
         input_ids: torch.Tensor,
         attention_mask: torch.Tensor | None = None,
-        labels: torch.Tensor | None = None
+        labels: torch.Tensor | None = None,
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
 
         # compute embedding
-        base_out = self.base_model(
-            input_ids=input_ids,
-            attention_mask=attention_mask
-        )
+        base_out = self.base_model(input_ids=input_ids, attention_mask=attention_mask)
 
         last_hidden_state = base_out.last_hidden_state  # (batch, sequence, features)
 

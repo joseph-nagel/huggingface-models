@@ -1,4 +1,4 @@
-'''Data transformations.'''
+"""Data transformations."""
 
 from collections.abc import Callable
 
@@ -7,7 +7,7 @@ import torch
 
 
 class DataTransform:
-    '''
+    """
     Helper class for applying an image transform to a datasets.Dataset.
 
     Summary
@@ -30,15 +30,15 @@ class DataTransform:
     lbl_target_key : str or None
         Key of the labels in returned batch dict.
 
-    '''
+    """
 
     def __init__(
         self,
         img_transform: Callable[[Image.Image], torch.tensor] | None,
-        img_source_key: str = 'img',
-        img_target_key: str | None = 'pixel_values',
-        lbl_source_key: str = 'label',
-        lbl_target_key: str | None = 'labels'
+        img_source_key: str = "img",
+        img_target_key: str | None = "pixel_values",
+        lbl_source_key: str = "label",
+        lbl_target_key: str | None = "labels",
     ):
 
         # set image transform
@@ -49,21 +49,21 @@ class DataTransform:
             img_source_key = img_source_key
             img_target_key = img_source_key
         elif None in (img_source_key, img_target_key):
-            raise TypeError('Invalid image source/target keys')
+            raise TypeError("Invalid image source/target keys")
 
         # prepare label keys
         if (lbl_source_key is not None) and (lbl_target_key is None):
             lbl_source_key = lbl_source_key
             lbl_target_key = lbl_source_key
         elif None in (lbl_source_key, lbl_target_key):
-            raise TypeError('Invalid label source/target keys')
+            raise TypeError("Invalid label source/target keys")
 
         # set image and label keys
         img_keys = (img_source_key, img_target_key)
         lbl_keys = (lbl_source_key, lbl_target_key)
 
         if any([k in img_keys for k in lbl_keys]) or any([k in lbl_keys for k in img_keys]):
-            raise ValueError('Image and label keys need to be strictly different')
+            raise ValueError("Image and label keys need to be strictly different")
         else:
             self.img_source_key = img_source_key
             self.img_target_key = img_target_key
@@ -72,13 +72,13 @@ class DataTransform:
             self.lbl_target_key = lbl_target_key
 
     def __call__(self, batch_dict: dict) -> dict:
-        '''Apply transform to a batch of PIL images.'''
+        """Apply transform to a batch of PIL images."""
 
         # apply transform to images
         source_imgs = batch_dict.pop(self.img_source_key)
 
         if self.img_transform is not None:
-            transformed_imgs = [self.img_transform(img.convert('RGB')) for img in source_imgs]
+            transformed_imgs = [self.img_transform(img.convert("RGB")) for img in source_imgs]
         else:
             transformed_imgs = source_imgs
 

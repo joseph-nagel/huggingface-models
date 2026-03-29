@@ -1,4 +1,4 @@
-'''Model layers.'''
+"""Model layers."""
 
 from . import dense, utils
 from .dense import DenseBlock
@@ -8,5 +8,5 @@ from .utils import (
     make_activation,
     make_block,
     make_dropout,
-    make_dense
+    make_dense,
 )

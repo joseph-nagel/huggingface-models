@@ -1,4 +1,4 @@
-'''Dense block.'''
+"""Dense block."""
 
 from collections.abc import Sequence
 
@@ -8,7 +8,7 @@ from .utils import ActivType, make_dense
 
 
 class DenseBlock(nn.Sequential):
-    '''
+    """
     Block of multiple dense layers.
 
     Parameters
@@ -26,40 +26,40 @@ class DenseBlock(nn.Sequential):
     drop_rate : float or None
         Dropout probability.
 
-    '''
+    """
 
     def __init__(
         self,
         num_features: Sequence[int],
-        activation: ActivType | None = 'leaky_relu',
+        activation: ActivType | None = "leaky_relu",
         last_activation: ActivType | None = None,
         batchnorm: bool = False,
         normalize_last: bool = True,
-        drop_rate: float | None = None
+        drop_rate: float | None = None,
     ):
 
         # determine last activation
-        if last_activation == 'same':
+        if last_activation == "same":
             last_activation = activation
 
         # check number of layers
         if len(num_features) >= 2:
             num_layers = len(num_features) - 1
         else:
-            raise ValueError('Number of features needs at least two entries')
+            raise ValueError("Number of features needs at least two entries")
 
         # assemble layers
         layers = []
 
         for idx, (in_features, out_features) in enumerate(zip(num_features[:-1], num_features[1:])):
-            is_not_last = (idx < num_layers - 1)
+            is_not_last = idx < num_layers - 1
 
             dense = make_dense(
                 in_features,
                 out_features,
                 activation=activation if is_not_last else last_activation,
                 batchnorm=batchnorm if is_not_last else (batchnorm and normalize_last),
-                drop_rate=drop_rate
+                drop_rate=drop_rate,
             )
 
             layers.append(dense)

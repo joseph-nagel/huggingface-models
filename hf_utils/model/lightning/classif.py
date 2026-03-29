@@ -1,4 +1,4 @@
-'''Lightning image classifier.'''
+"""Lightning image classifier."""
 
 from typing import Any
 from pathlib import Path
@@ -11,7 +11,7 @@ from .base import LightningHFModel
 
 
 class LightningHFImageClassif(LightningHFModel):
-    '''
+    """
     Lightning wrapper for Hugging Face image classifiers.
 
     Parameters
@@ -26,7 +26,7 @@ class LightningHFImageClassif(LightningHFModel):
         Initial learning rate.
     lr_schedule : str or None
         Learning rate schedule type.
-    lr_interval : {'epoch', 'step'} or None
+    lr_interval : {"epoch", "step"} or None
         Learning rate update interval.
     lr_warmup : int or None
         Number of warmup steps/epochs.
@@ -35,30 +35,30 @@ class LightningHFImageClassif(LightningHFModel):
     freeze_backbone: bool
         Determines whether backbone is frozen.
 
-    '''
+    """
 
     def __init__(
         self,
-        model_name: str = 'facebook/dinov2-small-imagenet1k-1-layer',
+        model_name: str = "facebook/dinov2-small-imagenet1k-1-layer",
         data_dir: str | None = None,
         num_labels: int | None = None,
         lr: float = 1e-04,
-        lr_schedule: str | None = 'constant',
-        lr_interval: str | None = 'epoch',
+        lr_schedule: str | None = "constant",
+        lr_interval: str | None = "epoch",
         lr_warmup: int | None = None,
         lr_cycles: int | None = None,
-        freeze_backbone : bool = True
+        freeze_backbone: bool = True,
     ):
 
         # load pretrained model
-        further_opts = {} if num_labels is None else {'num_labels': num_labels, 'ignore_mismatched_sizes': True}
+        further_opts = {} if num_labels is None else {"num_labels": num_labels, "ignore_mismatched_sizes": True}
 
         model = AutoModelForImageClassification.from_pretrained(
             model_name,
             cache_dir=data_dir,
-            **further_opts
+            **further_opts,
             # num_labels=num_labels,  # this argument should not be None
-            # ignore_mismatched_sizes=False if num_labels is None else True
+            # ignore_mismatched_sizes=False if num_labels is None else True,
         )
 
         model = model.train()
@@ -78,7 +78,7 @@ class LightningHFImageClassif(LightningHFModel):
             lr_schedule=lr_schedule,
             lr_interval=lr_interval,
             lr_warmup=lr_warmup,
-            lr_cycles=lr_cycles
+            lr_cycles=lr_cycles,
         )
 
         # store hyperparams
@@ -86,8 +86,8 @@ class LightningHFImageClassif(LightningHFModel):
             abs_data_dir = str(Path(data_dir).resolve())
 
             self.save_hyperparameters(
-                {'data_dir': abs_data_dir},  # store absolute custom cache path for later re-import
-                logger=True
+                {"data_dir": abs_data_dir},  # store absolute custom cache path for later re-import
+                logger=True,
             )
         else:
             self.save_hyperparameters(logger=True)
@@ -95,17 +95,17 @@ class LightningHFImageClassif(LightningHFModel):
         # create accuracy metrics
         num_labels = num_labels if num_labels is not None else model.config.num_labels
 
-        self.train_acc = Accuracy(task='multiclass', num_classes=num_labels)
-        self.val_acc = Accuracy(task='multiclass', num_classes=num_labels)
-        self.test_acc = Accuracy(task='multiclass', num_classes=num_labels)
+        self.train_acc = Accuracy(task="multiclass", num_classes=num_labels)
+        self.val_acc = Accuracy(task="multiclass", num_classes=num_labels)
+        self.test_acc = Accuracy(task="multiclass", num_classes=num_labels)
 
     def loss(
         self,
         return_logits: bool = False,
         *args: torch.Tensor,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
-        '''Compute loss (and optionally return logits).'''
+        """Compute loss (and optionally return logits)."""
         outputs = self.model(*args, **kwargs)
 
         if return_logits:
@@ -113,35 +113,23 @@ class LightningHFImageClassif(LightningHFModel):
         else:
             return outputs.loss
 
-    def training_step(
-        self,
-        batch: dict[str, torch.Tensor],
-        batch_idx: int
-    ) -> torch.Tensor:
+    def training_step(self, batch: dict[str, torch.Tensor], batch_idx: int) -> torch.Tensor:
         loss, logits = self.loss(return_logits=True, **batch)
-        _ = self.train_acc(logits, batch['labels'])
-        self.log('train_loss', loss.item())  # Lightning logs batch-wise scalars during training per default
-        self.log('train_acc', self.train_acc)  # the same applies to torchmetrics.Metric objects
+        _ = self.train_acc(logits, batch["labels"])
+        self.log("train_loss", loss.item())  # Lightning logs batch-wise scalars during training per default
+        self.log("train_acc", self.train_acc)  # the same applies to torchmetrics.Metric objects
         return loss
 
-    def validation_step(
-        self,
-        batch: dict[str, torch.Tensor],
-        batch_idx: int
-    ) -> torch.Tensor:
+    def validation_step(self, batch: dict[str, torch.Tensor], batch_idx: int) -> torch.Tensor:
         loss, logits = self.loss(return_logits=True, **batch)
-        _ = self.val_acc(logits, batch['labels'])
-        self.log('val_loss', loss.item())  # Lightning automatically averages scalars over batches for validation
-        self.log('val_acc', self.val_acc)  # the batch size is considered when logging torchmetrics.Metric objects
+        _ = self.val_acc(logits, batch["labels"])
+        self.log("val_loss", loss.item())  # Lightning automatically averages scalars over batches for validation
+        self.log("val_acc", self.val_acc)  # the batch size is considered when logging torchmetrics.Metric objects
         return loss
 
-    def test_step(
-        self,
-        batch: dict[str, torch.Tensor],
-        batch_idx: int
-    ) -> torch.Tensor:
+    def test_step(self, batch: dict[str, torch.Tensor], batch_idx: int) -> torch.Tensor:
         loss, logits = self.loss(return_logits=True, **batch)
-        _ = self.test_acc(logits, batch['labels'])
-        self.log('test_loss', loss.item())  # Lightning automatically averages scalars over batches for testing
-        self.log('test_acc', self.test_acc)  # the batch size is considered when logging torchmetrics.Metric objects
+        _ = self.test_acc(logits, batch["labels"])
+        self.log("test_loss", loss.item())  # Lightning automatically averages scalars over batches for testing
+        self.log("test_acc", self.test_acc)  # the batch size is considered when logging torchmetrics.Metric objects
         return loss

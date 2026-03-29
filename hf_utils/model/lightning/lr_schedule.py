@@ -1,4 +1,4 @@
-'''Learning rate scheduling.'''
+"""Learning rate scheduling."""
 
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler
@@ -6,26 +6,26 @@ from transformers import (
     get_constant_schedule_with_warmup,
     get_linear_schedule_with_warmup,
     get_cosine_schedule_with_warmup,
-    get_cosine_with_hard_restarts_schedule_with_warmup
+    get_cosine_with_hard_restarts_schedule_with_warmup,
 )
 
 
 LR_SCHEDULES = [
-    'constant',
-    'linear',
-    'cosine',
-    'cosine_with_hard_restarts'
+    "constant",
+    "linear",
+    "cosine",
+    "cosine_with_hard_restarts",
 ]
 
 
 def make_lr_schedule(
     optimizer: Optimizer,
-    mode: str | None = 'constant',
+    mode: str | None = "constant",
     num_warmup: int | None = None,
     num_total: int | None = None,
-    num_cycles: int | None = None
+    num_cycles: int | None = None,
 ) -> LRScheduler:
-    '''
+    """
     Create learning rate scheduler.
 
     Summary
@@ -47,7 +47,7 @@ def make_lr_schedule(
     num_cycles : int or None
         Number of hard restarts.
 
-    '''
+    """
 
     num_warmup = max(0, num_warmup) if num_warmup is not None else 0
     num_total = max(0, num_total) if num_total is not None else 0
@@ -55,38 +55,38 @@ def make_lr_schedule(
 
     # set constant mode as default
     if mode is None:
-        mode = 'constant'
+        mode = "constant"
 
     # create LR scheduler
-    if mode == 'constant':
+    if mode == "constant":
         lr_scheduler = get_constant_schedule_with_warmup(
             optimizer,
-            num_warmup_steps=num_warmup
+            num_warmup_steps=num_warmup,
         )
 
-    elif mode == 'linear':
+    elif mode == "linear":
         lr_scheduler = get_linear_schedule_with_warmup(
             optimizer,
             num_warmup_steps=num_warmup,
-            num_training_steps=num_total
+            num_training_steps=num_total,
         )
 
-    elif mode == 'cosine':
+    elif mode == "cosine":
         lr_scheduler = get_cosine_schedule_with_warmup(
             optimizer,
             num_warmup_steps=num_warmup,
-            num_training_steps=num_total
+            num_training_steps=num_total,
         )
 
-    elif mode == 'cosine_with_hard_restarts':
+    elif mode == "cosine_with_hard_restarts":
         lr_scheduler = get_cosine_with_hard_restarts_schedule_with_warmup(
             optimizer,
             num_warmup_steps=num_warmup,
             num_training_steps=num_total,
-            num_cycles=num_cycles
+            num_cycles=num_cycles,
         )
 
     else:
-        raise ValueError(f'Unknown LR schedule type: {mode}')
+        raise ValueError(f"Unknown LR schedule type: {mode}")
 
     return lr_scheduler

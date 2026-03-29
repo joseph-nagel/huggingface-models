@@ -1,4 +1,4 @@
-'''PyTorch utilities.'''
+"""PyTorch utilities."""
 
 from typing import Any
 from collections.abc import Sequence
@@ -11,19 +11,19 @@ ActivType = str | type[nn.Module]
 
 
 ACTIVATIONS = {
-    'identity': nn.Identity,
-    'sigmoid': nn.Sigmoid,
-    'tanh': nn.Tanh,
-    'relu': nn.ReLU,
-    'leaky_relu': nn.LeakyReLU,
-    'elu': nn.ELU,
-    'softplus': nn.Softplus,
-    'swish': nn.SiLU
+    "identity": nn.Identity,
+    "sigmoid": nn.Sigmoid,
+    "tanh": nn.Tanh,
+    "relu": nn.ReLU,
+    "leaky_relu": nn.LeakyReLU,
+    "elu": nn.ELU,
+    "softplus": nn.Softplus,
+    "swish": nn.SiLU,
 }
 
 
-def make_activation(mode: ActivType | None = 'leaky_relu', **kwargs: Any) -> nn.Module | None:
-    '''Create activation function.'''
+def make_activation(mode: ActivType | None = "leaky_relu", **kwargs: Any) -> nn.Module | None:
+    """Create activation function."""
     if mode is None:
         activ = None
     elif isclass(mode):
@@ -31,33 +31,33 @@ def make_activation(mode: ActivType | None = 'leaky_relu', **kwargs: Any) -> nn.
     elif isinstance(mode, str) and mode in ACTIVATIONS.keys():
         activ = ACTIVATIONS[mode](**kwargs)
     else:
-        raise ValueError(f'Unknown activation: {mode}')
+        raise ValueError(f"Unknown activation: {mode}")
     return activ
 
 
 def make_block(layers: nn.Module | Sequence[nn.Module | None]) -> nn.Module:
-    '''Assemble a block of layers.'''
+    """Assemble a block of layers."""
 
     if isinstance(layers, nn.Module):
         block = layers
 
     elif isinstance(layers, (list, tuple)):
-        not_none_layers = [l for l in layers if l is not None]
+        not_none_layers = [lr for lr in layers if lr is not None]
         if len(not_none_layers) == 0:
-            raise ValueError('No layers to assemble')
+            raise ValueError("No layers to assemble")
         elif len(not_none_layers) == 1:
             block = not_none_layers[0]
         else:
             block = nn.Sequential(*not_none_layers)
 
     else:
-        raise TypeError(f'Invalid layers type: {type(layers)}')
+        raise TypeError(f"Invalid layers type: {type(layers)}")
 
     return block
 
 
 def make_dropout(drop_rate: float | None = None) -> nn.Module | None:
-    '''Create a dropout layer.'''
+    """Create a dropout layer."""
     if drop_rate is None:
         dropout = None
     else:
@@ -71,9 +71,9 @@ def make_dense(
     bias: bool = True,
     activation: ActivType | None = None,
     batchnorm: bool = False,
-    drop_rate: float | None = None
+    drop_rate: float | None = None,
 ) -> nn.Module:
-    '''
+    """
     Create fully connected layer.
 
     Parameters
@@ -91,7 +91,7 @@ def make_dense(
     drop_rate : float or None
         Dropout probability.
 
-    '''
+    """
 
     # create dropout layer
     dropout = make_dropout(drop_rate=drop_rate)
@@ -100,7 +100,7 @@ def make_dense(
     linear = nn.Linear(
         in_features,
         out_features,
-        bias=bias  # the bias should be disabled if a batchnorm directly follows after the linear layer
+        bias=bias,  # the bias should be disabled if a batchnorm directly follows after the linear layer
     )
 
     # create activation function
@@ -110,7 +110,12 @@ def make_dense(
     norm = nn.BatchNorm1d(out_features) if batchnorm else None
 
     # assemble block
-    layers = [dropout, linear, activ, norm]  # note that the normalization follows the activation (which could be reversed of course)
+    layers = [
+        dropout,
+        linear,
+        activ,
+        norm,  # note that the normalization follows the activation (which could be reversed of course)
+    ]
     dense_block = make_block(layers)
 
     return dense_block

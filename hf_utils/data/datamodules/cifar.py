@@ -1,4 +1,4 @@
-'''CIFAR datamodules.'''
+"""CIFAR datamodules."""
 
 import torch
 from torchvision import transforms
@@ -13,7 +13,7 @@ FloatOrFloats = float | tuple[float, float, float]
 
 
 class CIFAR10DataModule(BaseDataModule):
-    '''
+    """
     Lightning DataModule for the Hugging Face CIFAR-10 dataset.
 
     Parameters
@@ -36,7 +36,7 @@ class CIFAR10DataModule(BaseDataModule):
     num_workers : int
         Number of workers for the loader.
 
-    '''
+    """
 
     def __init__(
         self,
@@ -47,22 +47,26 @@ class CIFAR10DataModule(BaseDataModule):
         random_state: int = 42,
         tiny: bool = False,
         batch_size: int = 32,
-        num_workers: int = 0
+        num_workers: int = 0,
     ):
 
         # create transforms
-        train_transform = transforms.Compose([
-            transforms.Resize(img_size),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=img_mean, std=img_std)
-        ])
+        train_transform = transforms.Compose(
+            [
+                transforms.Resize(img_size),
+                transforms.RandomHorizontalFlip(),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=img_mean, std=img_std),
+            ]
+        )
 
-        val_transform = transforms.Compose([
-            transforms.Resize(img_size),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=img_mean, std=img_std)
-        ])
+        val_transform = transforms.Compose(
+            [
+                transforms.Resize(img_size),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=img_mean, std=img_std),
+            ]
+        )
 
         test_transform = val_transform
 
@@ -73,17 +77,19 @@ class CIFAR10DataModule(BaseDataModule):
             val_transform=val_transform,
             test_transform=test_transform,
             batch_size=batch_size,
-            num_workers=num_workers
+            num_workers=num_workers,
         )
 
         # create inverse normalization
         img_mean = torch.as_tensor(img_mean).view(-1, 1, 1)
         img_std = torch.as_tensor(img_std).view(-1, 1, 1)
 
-        self.renormalize = transforms.Compose([
-            transforms.Lambda(lambda x: x * img_std + img_mean),  # reverse normalization
-            transforms.Lambda(lambda x: x.clamp(0, 1))  # clip to valid range
-        ])
+        self.renormalize = transforms.Compose(
+            [
+                transforms.Lambda(lambda x: x * img_std + img_mean),  # reverse normalization
+                transforms.Lambda(lambda x: x.clamp(0, 1)),  # clip to valid range
+            ]
+        )
 
         # set data location
         self.data_dir = data_dir
@@ -96,63 +102,57 @@ class CIFAR10DataModule(BaseDataModule):
 
     @property
     def label_names(self) -> list[str]:
-        '''Get label names.'''
+        """Get label names."""
 
-        if hasattr(self, 'ds'):
-            return self.ds['train'].features['label'].names
+        if hasattr(self, "ds"):
+            return self.ds["train"].features["label"].names
         else:
-            raise AttributeError('Data has not been loaded/initialized yet')
+            raise AttributeError("Data has not been loaded/initialized yet")
 
     @property
     def id2label(self) -> dict[int, str]:
-        '''Get idx-to-label dict.'''
+        """Get idx-to-label dict."""
         return {idx: label for idx, label in enumerate(self.label_names)}
 
     @property
     def label2id(self) -> dict[str, int]:
-        '''Get label-to-idx dict.'''
+        """Get label-to-idx dict."""
         return {label: idx for idx, label in enumerate(self.label_names)}
 
     def prepare_data(self) -> None:
-        '''Download data.'''
+        """Download data."""
 
         # initialize a datasets.Dataset
         if not self.tiny:
-            self.ds = load_dataset(
-                'cifar10',
-                cache_dir=self.data_dir
-            )
+            self.ds = load_dataset("cifar10", cache_dir=self.data_dir)
 
         # use a minimal version of the data
         else:
             self.ds = load_dataset(
-                'cifar10',
+                "cifar10",
                 cache_dir=self.data_dir,
-                split='train[:200]'
+                split="train[:200]",
             ).train_test_split(0.2, seed=0)
 
     def setup(self, stage: str) -> None:
-        '''Set up train/test/val. datasets.'''
+        """Set up train/test/val. datasets."""
 
         # create train/val. datasets
-        if stage in ('fit', 'validate'):
-            train_ds = self.ds['train']
+        if stage in ("fit", "validate"):
+            train_ds = self.ds["train"]
 
-            split_ds = train_ds.train_test_split(
-                test_size=0.2,
-                seed=self.random_state
-            )
+            split_ds = train_ds.train_test_split(test_size=0.2, seed=self.random_state)
 
-            self.train_ds = split_ds['train']
-            self.val_ds = split_ds['test']
+            self.train_ds = split_ds["train"]
+            self.val_ds = split_ds["test"]
 
             # set image transformations
             self.train_ds.set_transform(DataTransform(self.train_transform))
             self.val_ds.set_transform(DataTransform(self.val_transform))
 
         # create test dataset
-        elif stage == 'test':
-            self.test_ds = self.ds['test']
+        elif stage == "test":
+            self.test_ds = self.ds["test"]
 
             # set image transformation
             self.test_ds.set_transform(DataTransform(self.test_transform))

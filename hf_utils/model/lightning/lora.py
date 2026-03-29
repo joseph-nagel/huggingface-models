@@ -1,4 +1,4 @@
-'''Lightning image classifier with LoRA.'''
+"""Lightning image classifier with LoRA."""
 
 from collections.abc import Sequence
 from typing import Literal
@@ -8,7 +8,7 @@ from .classif import LightningHFImageClassif
 
 
 class LightningHFImageClassifLoRA(LightningHFImageClassif):
-    '''
+    """
     Lightning wrapper for Hugging Face image classifiers.
 
     Parameters
@@ -23,7 +23,7 @@ class LightningHFImageClassifLoRA(LightningHFImageClassif):
         Initial learning rate.
     lr_schedule : str or None
         Learning rate schedule type.
-    lr_interval : {'epoch', 'step'} or None
+    lr_interval : {"epoch", "step"} or None
         Learning rate update interval.
     lr_warmup : int or None
         Number of warmup steps/epochs.
@@ -37,29 +37,29 @@ class LightningHFImageClassifLoRA(LightningHFImageClassif):
         LoRA weighting parameter.
     lora_dropout : float or None
         LoRA dropout rate.
-    lora_bias : {'none', 'all', 'lora_only'}
+    lora_bias : {"none", "all", "lora_only"}
         Determines where a bias is used.
     lora_target_modules: str, Sequence[str] or None
         Modules to apply LoRA to.
 
-    '''
+    """
 
     def __init__(
         self,
-        model_name: str = 'facebook/dinov2-small-imagenet1k-1-layer',
+        model_name: str = "facebook/dinov2-small-imagenet1k-1-layer",
         data_dir: str | None = None,
         num_labels: int | None = None,
         lr: float = 1e-04,
-        lr_schedule: str | None = 'constant',
-        lr_interval: str | None = 'epoch',
+        lr_schedule: str | None = "constant",
+        lr_interval: str | None = "epoch",
         lr_warmup: int | None = None,
         lr_cycles: int | None = None,
-        freeze_backbone : bool = True,
+        freeze_backbone: bool = True,
         lora_rank: int = 8,
         lora_alpha: float | None = None,
         lora_dropout: float | None = None,
-        lora_bias: Literal['none', 'all', 'lora_only'] = 'none',
-        lora_target_modules: str | Sequence[str] | None = None
+        lora_bias: Literal["none", "all", "lora_only"] = "none",
+        lora_target_modules: str | Sequence[str] | None = None,
     ):
 
         # initialize parent class
@@ -72,7 +72,7 @@ class LightningHFImageClassifLoRA(LightningHFImageClassif):
             lr_interval=lr_interval,
             lr_warmup=lr_warmup,
             lr_cycles=lr_cycles,
-            freeze_backbone=freeze_backbone or (lora_rank > 0)
+            freeze_backbone=freeze_backbone or (lora_rank > 0),
         )
 
         # enable LoRA
@@ -84,7 +84,7 @@ class LightningHFImageClassifLoRA(LightningHFImageClassif):
                 dropout=lora_dropout,
                 bias=lora_bias,
                 target_modules=lora_target_modules,  # specify layers to apply LoRA (linear, conv, MHA, etc.)
-                modules_to_save=['classifier']  # specify layers to unfreeze and update
+                modules_to_save=["classifier"],  # specify layers to unfreeze and update
             )
 
         # store hyperparams

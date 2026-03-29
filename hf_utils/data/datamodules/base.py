@@ -1,4 +1,4 @@
-'''Base datamodule.'''
+"""Base datamodule."""
 
 from collections.abc import Callable
 
@@ -10,7 +10,7 @@ from lightning import LightningDataModule
 
 
 class BaseDataModule(LightningDataModule):
-    '''
+    """
     Lightning base DataModule for Hugging Face datasets.
 
     Parameters
@@ -28,7 +28,7 @@ class BaseDataModule(LightningDataModule):
     num_workers : int
         Number of workers for the loader.
 
-    '''
+    """
 
     def __init__(
         self,
@@ -37,7 +37,7 @@ class BaseDataModule(LightningDataModule):
         val_transform: Callable[[Image.Image], torch.tensor] | None = None,
         test_transform: Callable[[Image.Image], torch.tensor] | None = None,
         batch_size: int = 32,
-        num_workers: int  = 0
+        num_workers: int = 0,
     ):
         super().__init__()
 
@@ -58,13 +58,15 @@ class BaseDataModule(LightningDataModule):
 
         # if no transform is passed, initialize the universal one with a default
         if (transform is None) and all_spec_transforms_are_none:
-            transform = transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=(0.5, 0.5, 0.5),
-                    std=(0.5, 0.5, 0.5)
-                )
-            ])
+            transform = transforms.Compose(
+                [
+                    transforms.ToTensor(),
+                    transforms.Normalize(
+                        mean=(0.5, 0.5, 0.5),
+                        std=(0.5, 0.5, 0.5),
+                    ),
+                ]
+            )
 
         # if a universal transform is passed, set all specific ones accordingly
         if (transform is not None) and all_spec_transforms_are_none:
@@ -79,46 +81,46 @@ class BaseDataModule(LightningDataModule):
             self.test_transform = test_transform
 
         else:
-            raise ValueError('Invalid combination of transforms')
+            raise ValueError("Invalid combination of transforms")
 
     def train_dataloader(self) -> DataLoader:
-        '''Create train dataloader.'''
-        if hasattr(self, 'train_ds') and self.train_ds is not None:
+        """Create train dataloader."""
+        if hasattr(self, "train_ds") and self.train_ds is not None:
             return DataLoader(
                 self.train_ds,  # DataLoaders accept datasets.Dataset objects
                 batch_size=self.batch_size,
                 drop_last=True,
                 shuffle=True,
                 num_workers=self.num_workers,
-                pin_memory=self.num_workers > 0
+                pin_memory=self.num_workers > 0,
             )
         else:
-            raise AttributeError('Train set has not been set')
+            raise AttributeError("Train set has not been set")
 
     def val_dataloader(self) -> DataLoader:
-        '''Create val. dataloader.'''
-        if hasattr(self, 'val_ds') and self.val_ds is not None:
+        """Create val. dataloader."""
+        if hasattr(self, "val_ds") and self.val_ds is not None:
             return DataLoader(
                 self.val_ds,
                 batch_size=self.batch_size,
                 drop_last=False,
                 shuffle=False,
                 num_workers=self.num_workers,
-                pin_memory=self.num_workers > 0
+                pin_memory=self.num_workers > 0,
             )
         else:
-            raise AttributeError('Val. set has not been set')
+            raise AttributeError("Val. set has not been set")
 
     def test_dataloader(self) -> DataLoader:
-        '''Create test dataloader.'''
-        if hasattr(self, 'test_ds') and self.test_ds is not None:
+        """Create test dataloader."""
+        if hasattr(self, "test_ds") and self.test_ds is not None:
             return DataLoader(
                 self.test_ds,
                 batch_size=self.batch_size,
                 drop_last=False,
                 shuffle=False,
                 num_workers=self.num_workers,
-                pin_memory=self.num_workers > 0
+                pin_memory=self.num_workers > 0,
             )
         else:
-            raise AttributeError('Test set has not been set')
+            raise AttributeError("Test set has not been set")

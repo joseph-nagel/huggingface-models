@@ -1,4 +1,4 @@
-'''Hugging Face utilities.'''
+"""Hugging Face utilities."""
 
 from . import data, layers, model
 from .data import (
@@ -6,7 +6,7 @@ from .data import (
     load_imdb,
     BaseDataModule,
     CIFAR10DataModule,
-    DataTransform
+    DataTransform,
 )
 from .layers import (
     ActivType,
@@ -15,7 +15,7 @@ from .layers import (
     make_block,
     make_dropout,
     make_dense,
-    DenseBlock
+    DenseBlock,
 )
 from .model import (
     make_lora,
@@ -24,5 +24,5 @@ from .model import (
     LightningHFImageClassifLoRA,
     BaseClassif,
     DistilBertClassif,
-    DistilGPT2Classif
+    DistilGPT2Classif,
 )
