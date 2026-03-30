@@ -110,12 +110,7 @@ def make_dense(
     norm = nn.BatchNorm1d(out_features) if batchnorm else None
 
     # assemble block
-    layers = [
-        dropout,
-        linear,
-        activ,
-        norm,  # note that the normalization follows the activation (which could be reversed of course)
-    ]
+    layers = [dropout, linear, activ, norm]  # note that normalization follows activation (which could be reversed)
     dense_block = make_block(layers)
 
     return dense_block
