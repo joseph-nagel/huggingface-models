@@ -88,4 +88,4 @@ class LightningHFImageClassifLoRA(LightningHFImageClassif):
             )
 
         # store hyperparams
-        self.save_hyperparameters(logger=True)
+        self.save_hyperparameters()

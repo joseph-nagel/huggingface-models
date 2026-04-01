@@ -90,7 +90,7 @@ class LightningHFImageClassif(LightningHFModel):
                 logger=True,
             )
         else:
-            self.save_hyperparameters(logger=True)
+            self.save_hyperparameters()
 
         # create accuracy metrics
         num_labels = num_labels if num_labels is not None else model.config.num_labels

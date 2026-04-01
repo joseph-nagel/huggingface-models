@@ -12,6 +12,6 @@ datasets
 accelerate
 evaluate
 peft
+omegaconf
 matplotlib
 notebook
-ruff

@@ -56,7 +56,7 @@ class LightningHFModel(LightningModule):
         self.lr_cycles = abs(int(lr_cycles)) if lr_cycles is not None else None
 
         # store hyperparams
-        self.save_hyperparameters(ignore=["model"], logger=True)
+        self.save_hyperparameters(ignore=["model"])
 
     def forward(self, *args: torch.Tensor, **kwargs: Any) -> torch.Tensor:
         """Run the model."""

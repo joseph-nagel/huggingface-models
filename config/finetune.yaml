@@ -28,7 +28,7 @@ model:
     freeze_backbone: true
 
 trainer:
-  accelerator: "gpu"
+  accelerator: "auto"
   max_epochs: 100
   log_every_n_steps: 10
   check_val_every_n_epoch: 1
