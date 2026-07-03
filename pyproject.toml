@@ -11,7 +11,7 @@ version = "0.0.1"
 description = "Hugging Face models"
 readme = "README.md"
 requires-python = ">=3.12"
-license = {file = "LICENSE"}
+license = "MIT"
 authors = [
     {name = "Joseph Nagel", email = "JosephBNagel@gmail.com"}
 ]
